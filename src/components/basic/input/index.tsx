@@ -22,9 +22,10 @@ const Input = (props: InputProps) => {
     }
   }, [maxAmountInput, onUserInput]);
   return (
+    // todo #Beigiz we need to programmaticly bind the input focus to its wrapper for ui changes (border + shadow)
     <div className={`${(className) ? className: ''} inline-flex flex-col`}>
       {label && (<label className={'text-gray mb-0.5 pl-0.5'}>{label}</label>)}
-      <div className={'inline-flex bg-white border-soft-sky border-2 rounded-xl px-4 h-14'}>
+      <div className={'inline-flex bg-white border-soft-sky border-2 focus:border-pink-500 focus:ring-pink-500 rounded-xl px-4 h-14'}>
         <div className={'input-icon'}></div>
         {/*todo remove focus on input*/}
         <input

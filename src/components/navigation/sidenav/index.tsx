@@ -16,7 +16,7 @@ export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 
 const Sidenav = (props: ModalProps) => {
 
-  const [hasCode, setOpenhasCode] = useState(false);
+  const [hasCode, setOpenhasCode] = useState(true);
 
   function openhasCode() {
     setOpenhasCode(true);
