@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core';
+import Sidenav from "components/navigation/sidenav";
 import { getConnection } from 'connection/utils';
 import React, { useCallback, useMemo } from 'react';
 import { useAppDispatch } from 'state/hooks';
@@ -34,8 +35,11 @@ const Home = () => {
   };
 
   return (
-    <div className={'px-24 py-24'}>
-      <div>{renderConnector()}</div>
+    <div className={'px-40 py-14'}>
+      <Sidenav></Sidenav>
+      <div>{renderConnector()}
+      <h1>Dibs Affiliation Program</h1>
+      </div>
     </div>
   );
 };

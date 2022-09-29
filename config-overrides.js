@@ -1,5 +1,5 @@
 module.exports = {
-  webpack: function (config) {
+  webpack (config) {
     return { ...config, ignoreWarnings: [/Failed to parse source map/] };
   },
 };

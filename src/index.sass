@@ -4,9 +4,9 @@
 
 
 body
-  font-family: 'Titillium Web', sans-serif
+  font-family: 'Inter Tight', sans-serif
   font-weight: 500
-  @apply text-black
+  @apply text-black bg-body
   max-width: 1512px
   margin: auto
 
@@ -17,15 +17,18 @@ body
 @layer base
 
   h1
-    @apply text-3xl font-semibold
+    @apply text-4xl font-semibold
 
   h2
-    @apply text-2xl font-semibold
+    @apply text-3xl font-semibold
 
   h3
-    @apply text-xl font-semibold
+    @apply text-2xl font-semibold
 
   h4
+    @apply text-xl font-medium
+
+  h5
     @apply text-lg font-medium
 
 @layer components
@@ -96,4 +99,3 @@ body
       @apply text-5xl font-bold
     &:last-child
       @apply text-label text-sm font-medium
-

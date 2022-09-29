@@ -12,13 +12,14 @@ module.exports = {
         104: '26rem',
       },
       colors: {
-        primary: '#EF476F',
+        primary: '#5158F6',
         secondary: '#F59569',
         input: '#EFF3F8',
         label: '#565656',
         black: '#353535',
         chips: '#5EBAB0',
         gray: '#BFBFBF',
+        body: '#F6F8FA',
         'light-gray': '#EBECEF',
         'light-gray-2': '#EDF2F3',
         'dark-gray': '#757575',
@@ -48,5 +49,5 @@ module.exports = {
       },
     },
   },
-  // plugins: [require('@tailwindcss/forms'),require('@tailwindcss/aspect-ratio'),],
 }
+  // plugins: [require('@tailwindcss/forms'),require('@tailwind
