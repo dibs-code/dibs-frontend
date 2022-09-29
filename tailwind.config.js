@@ -11,6 +11,11 @@ module.exports = {
         100: '25rem',
         104: '26rem',
       },
+      padding: {
+        92: "23rem",
+        88: "22rem",
+        84: "21rem"
+      },
       colors: {
         primary: '#5158F6',
         secondary: '#F59569',
@@ -18,8 +23,9 @@ module.exports = {
         label: '#565656',
         black: '#353535',
         chips: '#5EBAB0',
-        gray: '#BFBFBF',
+        gray: '#6F7787',
         body: '#F6F8FA',
+        'soft-sky': '#BCC8DE',
         'light-gray': '#EBECEF',
         'light-gray-2': '#EDF2F3',
         'dark-gray': '#757575',
@@ -36,6 +42,7 @@ module.exports = {
         'token-left': "url('/img/tokenLeft-background.svg')",
         gradient: 'linear-gradient(135deg,#5158f6,#822df5 33.76%,#f3a761)',
         'presale-header': "url('/img/presale-header.svg')",
+        nocode: "url('../public/nocode.png')",
         'public-sale-header': "url('/img/public-header.svg')",
         squircle: "url('../public/squircle.png')",
         'gradient-light': "radial-gradient(62.15% 4494.21% at 43.37% 31.6%, rgba(239, 71, 111, 0.1) 0%, rgba(94, 87, 145, 0.1) 100%)",

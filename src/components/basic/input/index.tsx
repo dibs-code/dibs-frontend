@@ -6,27 +6,32 @@ import { maxAmountSpend } from 'utils/maxAmountSpend';
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   currencyBalance?: CurrencyAmount<Currency> | undefined;
   value: string;
-  onUserInput: (value: string) => void;
+  onUserInput?: (value: string) => void;
   testid?: string;
+  label? : string
+  className?: string
 }
 
 const Input = (props: InputProps) => {
-  const { currencyBalance, placeholder, onUserInput } = props;
+  const { className, currencyBalance, placeholder, label, onUserInput } = props;
 
   const maxAmountInput = maxAmountSpend(currencyBalance);
   const handleMax = useCallback(() => {
-    maxAmountInput && onUserInput(maxAmountInput.toExact());
+    if (onUserInput) {
+      maxAmountInput && onUserInput(maxAmountInput.toExact());
+    }
   }, [maxAmountInput, onUserInput]);
   return (
-    <>
-      <div className={'flex border-light-gray border-2 rounded-xl px-4 h-14'}>
+    <div className={`${(className) ? className: ''} inline-flex flex-col`}>
+      {label && (<label className={'text-gray mb-0.5 pl-0.5'}>{label}</label>)}
+      <div className={'inline-flex bg-white border-soft-sky border-2 rounded-xl px-4 h-14'}>
         <div className={'input-icon'}></div>
         {/*todo remove focus on input*/}
         <input
           type="number"
           placeholder={placeholder}
           className={'focus:outline-0'}
-          onChange={(e) => onUserInput(e.target.value)}
+          onChange={(e) => onUserInput ? onUserInput(e.target.value) : null}
           value={props.value}
           data-testid={props.testid && `${props.testid}-input`}
         ></input>
@@ -54,7 +59,7 @@ const Input = (props: InputProps) => {
           </div>
         )}
       </footer>
-    </>
+    </div>
   );
 };
 

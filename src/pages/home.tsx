@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core';
+import YourCode from "components/dashboard/YourCode";
 import Sidenav from "components/navigation/sidenav";
 import { getConnection } from 'connection/utils';
 import React, { useCallback, useMemo } from 'react';
@@ -37,7 +38,9 @@ const Home = () => {
   return (
     <div className={'px-40 py-14'}>
       <Sidenav></Sidenav>
-
+      <main className={'pl-84'}>
+        <YourCode></YourCode>
+      </main>
       {/*<div>{renderConnector()}*/}
       {/*</div>*/}
     </div>
