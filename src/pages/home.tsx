@@ -37,9 +37,9 @@ const Home = () => {
   return (
     <div className={'px-40 py-14'}>
       <Sidenav></Sidenav>
-      <div>{renderConnector()}
-      <h1>Dibs Affiliation Program</h1>
-      </div>
+
+      {/*<div>{renderConnector()}*/}
+      {/*</div>*/}
     </div>
   );
 };

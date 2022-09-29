@@ -4,7 +4,7 @@
 
 
 body
-  font-family: 'Inter Tight', sans-serif
+  font-family: 'Inter', sans-serif
   font-weight: 500
   @apply text-black bg-body
   max-width: 1512px
@@ -28,8 +28,8 @@ body
   h4
     @apply text-xl font-medium
 
-  h5
-    @apply text-lg font-medium
+  p, span, button
+    @apply text-[17px] font-medium
 
 @layer components
   .card
@@ -48,7 +48,7 @@ body
 
   .btn-primary-inverted
     @include btn
-    @apply text-primary bg-primary-light hover:bg-indigo-200
+    @apply text-primary bg-primary-light hover:bg-indigo-100
 
   .btn-secondary-inverted
     @include btn
@@ -63,6 +63,9 @@ body
   .btn-large
     @apply h-14 px-6 py-3 text-xl font-semibold rounded-xl
 
+  .btn-medium
+    @apply h-11 px-6 rounded-lg
+
 
   // STATUS
 
@@ -74,6 +77,10 @@ body
   .chips
     @apply text-xs rounded-md bg-chips text-white px-2 py-0.5
 
+  // navbar
+
+  .nav-item
+    @apply text-light-gray-3
 
 
   .text-gradient
