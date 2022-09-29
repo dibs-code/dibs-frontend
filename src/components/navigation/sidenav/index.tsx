@@ -39,8 +39,8 @@ const Sidenav = (props: ModalProps) => {
           { links.map(link => {
             return(
               <li className={`flex mb-3 items-center cursor-pointer transition duration-200 hover:text-primary ${(link.active) ? 'text-primary' : 'text-light-gray-3'}
-               ${(link.name == 'Reports') ? 'pl-0.5 gap-5' : 'pl-0 gap-4'}`} key={link.name}><FontAwesomeIcon style={{ fontSize: 20 }}
-                icon={link.icon}></FontAwesomeIcon><span>{link.name}</span></li>
+               ${(link.name == 'Reports') ? 'pl-0.5 gap-4' : 'pl-0 gap-3'}`} key={link.name}><FontAwesomeIcon style={{ fontSize: 20 }}
+                icon={link.icon}></FontAwesomeIcon><span className={`${(link.active) ? '' : 'font-normal'}`}>{link.name}</span></li>
             )
           }) }
         </ul>
