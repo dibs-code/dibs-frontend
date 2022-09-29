@@ -1,5 +1,3 @@
-import { TradeType } from '@uniswap/sdk-core';
-
 export interface SerializableTransactionReceipt {
   to: string;
   from: string;
@@ -17,59 +15,20 @@ export interface SerializableTransactionReceipt {
  */
 export enum TransactionType {
   APPROVAL = 0,
-  SWAP,
-  CLAIM,
-  DELEGATE,
 }
 
 export interface BaseTransactionInfo {
   type: TransactionType;
 }
 
-export interface DelegateTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.DELEGATE;
-  delegatee: string;
-}
-
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL;
   tokenAddress: string;
+  tokenSymbol?: string;
   spender: string;
 }
 
-interface BaseSwapTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.SWAP;
-  tradeType: TradeType;
-  inputCurrencyId: string;
-  outputCurrencyId: string;
-}
-
-export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
-  tradeType: TradeType.EXACT_INPUT;
-  inputCurrencyAmountRaw: string;
-  expectedOutputCurrencyAmountRaw: string;
-  minimumOutputCurrencyAmountRaw: string;
-}
-
-export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo {
-  tradeType: TradeType.EXACT_OUTPUT;
-  outputCurrencyAmountRaw: string;
-  expectedInputCurrencyAmountRaw: string;
-  maximumInputCurrencyAmountRaw: string;
-}
-
-export interface ClaimTransactionInfo {
-  type: TransactionType.CLAIM;
-  recipient: string;
-  uniAmountRaw?: string;
-}
-
-export type TransactionInfo =
-  | ApproveTransactionInfo
-  | ExactOutputSwapTransactionInfo
-  | ExactInputSwapTransactionInfo
-  | ClaimTransactionInfo
-  | DelegateTransactionInfo;
+export type TransactionInfo = ApproveTransactionInfo;
 
 export interface TransactionDetails {
   hash: string;
