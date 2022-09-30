@@ -9,5 +9,5 @@ export const MULTICALL_ADDRESS: AddressMap = {
 };
 
 export const DIBS_ADDRESS: AddressMap = {
-  [SupportedChainId.GOERLI]: '0xe6a079d866231c011620f37a9f0d80df96a026f0',
+  [SupportedChainId.GOERLI]: '0xc055d389c2758a68e0517036cdf98670175d6f8e',
 };

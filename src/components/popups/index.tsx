@@ -7,7 +7,6 @@ export default function Popups() {
 
   return (
     <>
-      {activePopups.length}
       {activePopups // reverse so new items up front
         .slice(0)
         .reverse()

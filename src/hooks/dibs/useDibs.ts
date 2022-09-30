@@ -20,15 +20,26 @@ export type ContractFunctionReturnType<T> = T extends (...args: any) => Promise<
 
 export function useDibs() {
   const dibsContract = useDibsContract();
-  const { account, provider } = useWeb3React();
+  const { account } = useWeb3React();
   const addressToCodeCall = useMemo(() => {
     if (!account) return [];
     return [dibsInterface.encodeFunctionData('addressToCode', [account])];
   }, [account]);
 
   const [addressToCodeResult] = useSingleContractWithCallData(dibsContract, addressToCodeCall);
+
   const addressToCode: ContractFunctionReturnType<Dibs['callStatic']['addressToCode']> | undefined =
     addressToCodeResult?.result?.[0];
 
-  return { addressToCode };
+  const codeToNameCall = useMemo(() => {
+    if (!addressToCode) return [];
+    return [dibsInterface.encodeFunctionData('codeToName', [addressToCode])];
+  }, [addressToCode]);
+
+  const [codeToNameResult] = useSingleContractWithCallData(dibsContract, codeToNameCall);
+
+  const addressToName: ContractFunctionReturnType<Dibs['callStatic']['addressToCode']> | undefined =
+    codeToNameResult?.result?.[0];
+
+  return { addressToName };
 }

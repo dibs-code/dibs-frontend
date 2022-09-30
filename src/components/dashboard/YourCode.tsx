@@ -3,7 +3,8 @@ import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Input from 'components/basic/input';
 import { useDibs } from 'hooks/dibs/useDibs';
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useCallback, useMemo } from 'react';
+import { copyToClipboard } from 'utils/index';
 
 // import { Dialog, Transition } from '@headlessui/react';
 
@@ -16,8 +17,8 @@ export interface ModalPropsInterface extends React.HTMLAttributes<HTMLElement> {
 export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 
 const YourCode = (props: ModalProps) => {
-  const { addressToCode } = useDibs();
-  const hasCode = !!addressToCode;
+  const { addressToName } = useDibs();
+  const hasCode = useMemo(() => !!addressToName, [addressToName]);
 
   function Create() {}
 
@@ -25,6 +26,12 @@ const YourCode = (props: ModalProps) => {
   // const [links, setLinks] = useState([]);
 
   // const { open, closeModal, children, className, title } = props;
+  const refUrl = useMemo(() => `${window.location.host}/?ref=${addressToName}`, [addressToName]);
+
+  const copyRefUrl = useCallback(async () => {
+    await copyToClipboard(refUrl);
+    alert('Copied to clipboard');
+  }, [refUrl]);
 
   return (
     <>
@@ -43,32 +50,32 @@ const YourCode = (props: ModalProps) => {
             <div>
               <div className={'rounded-xl bg-primary-light inline-block p-4'}>
                 <span className={'text-lg mr-3'}>Your Dibs Code:</span>
-                <span className={'text-2xl text-primary'}>{addressToCode}</span>
+                <span className={'text-2xl text-primary'}>{addressToName}</span>
               </div>
             </div>
             <div>
               <div className={'rounded-xl bg-soft-pink inline-block p-4'}>
                 <span className={'mr-2'}>Trade link: </span>
-                <span className={'font-normal mr-2'}>https://dextradelink.com/?Beigiz96</span>
+                <span className={'font-normal mr-2'}>{refUrl}</span>
                 <span
                   className={
                     'py-1 px-2 bg-white rounded shadow-[0_4px_6px_rgba(0,0,0,0.07)] cursor-pointer transition duration-200 hover:shadow-xl'
                   }
                 >
-                  <FontAwesomeIcon style={{ fontSize: 18 }} icon={faCopy}></FontAwesomeIcon>
+                  <FontAwesomeIcon style={{ fontSize: 18 }} icon={faCopy} onClick={copyRefUrl}></FontAwesomeIcon>
                 </span>
               </div>
             </div>
             <div>
               <div className={'rounded-xl bg-soft-blue inline-block p-4'}>
                 <span className={'mr-2'}>Register link:</span>
-                <span className={'font-normal mr-2'}> https://dibsregisterlink.com/?Beigiz96</span>
+                <span className={'font-normal mr-2'}>{refUrl}</span>
                 <span
                   className={
                     'py-1 px-2 bg-white rounded shadow-[0_4px_6px_rgba(0,0,0,0.07)] cursor-pointer transition duration-200 hover:shadow-xl'
                   }
                 >
-                  <FontAwesomeIcon style={{ fontSize: 18 }} icon={faCopy}></FontAwesomeIcon>
+                  <FontAwesomeIcon style={{ fontSize: 18 }} icon={faCopy} onClick={copyRefUrl}></FontAwesomeIcon>
                 </span>
               </div>
             </div>
