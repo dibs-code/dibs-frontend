@@ -4,16 +4,15 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount';
 import { maxAmountSpend } from 'utils/maxAmountSpend';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  currencyBalance?: CurrencyAmount<Currency> | undefined;
-  value: string;
+  currencyBalance?: CurrencyAmount<Currency>;
   onUserInput?: (value: string) => void;
   testid?: string;
-  label? : string
-  className?: string
+  label?: string;
+  className?: string;
 }
 
 const Input = (props: InputProps) => {
-  const { className, currencyBalance, placeholder, label, onUserInput } = props;
+  const { className, currencyBalance, placeholder, label, onUserInput, value } = props;
 
   const maxAmountInput = maxAmountSpend(currencyBalance);
   const handleMax = useCallback(() => {
@@ -23,17 +22,21 @@ const Input = (props: InputProps) => {
   }, [maxAmountInput, onUserInput]);
   return (
     // todo #Beigiz we need to programmaticly bind the input focus to its wrapper for ui changes (border + shadow)
-    <div className={`${(className) ? className: ''} inline-flex flex-col`}>
-      {label && (<label className={'text-gray mb-0.5 pl-0.5'}>{label}</label>)}
-      <div className={'inline-flex bg-white border-soft-sky border-2 focus:border-pink-500 focus:ring-pink-500 rounded-xl px-4 h-14'}>
+    <div className={`${className ? className : ''} inline-flex flex-col`}>
+      {label && <label className={'text-gray mb-0.5 pl-0.5'}>{label}</label>}
+      <div
+        className={
+          'inline-flex bg-white border-soft-sky border-2 focus:border-pink-500 focus:ring-pink-500 rounded-xl px-4 h-14'
+        }
+      >
         <div className={'input-icon'}></div>
         {/*todo remove focus on input*/}
         <input
-          type="number"
+          type={props.type}
+          value={value}
           placeholder={placeholder}
           className={'focus:outline-0'}
-          onChange={(e) => onUserInput ? onUserInput(e.target.value) : null}
-          value={props.value}
+          onChange={(e) => (onUserInput ? onUserInput(e.target.value) : null)}
           data-testid={props.testid && `${props.testid}-input`}
         ></input>
         <div className={'input-token'}></div>

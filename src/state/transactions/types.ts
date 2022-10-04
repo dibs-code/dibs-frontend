@@ -14,7 +14,8 @@ export interface SerializableTransactionReceipt {
  * These values is persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
-  APPROVAL = 0,
+  APPROVAL,
+  REGISTER,
 }
 
 export interface BaseTransactionInfo {
@@ -28,7 +29,12 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   spender: string;
 }
 
-export type TransactionInfo = ApproveTransactionInfo;
+export interface RegisterTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.REGISTER;
+  name: string;
+}
+
+export type TransactionInfo = ApproveTransactionInfo | RegisterTransactionInfo;
 
 export interface TransactionDetails {
   hash: string;

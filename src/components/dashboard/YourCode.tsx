@@ -1,9 +1,12 @@
 import { faCopy } from '@fortawesome/pro-regular-svg-icons';
 import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
 import { useDibs } from 'hooks/dibs/useDibs';
-import React, { PropsWithChildren, useCallback, useMemo } from 'react';
+import { useRegisterCallback } from 'hooks/dibs/useRegisterCallback';
+import useWalletActivation from 'hooks/useWalletActivation';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { copyToClipboard } from 'utils/index';
 
 // import { Dialog, Transition } from '@headlessui/react';
@@ -17,10 +20,39 @@ export interface ModalPropsInterface extends React.HTMLAttributes<HTMLElement> {
 export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 
 const YourCode = (props: ModalProps) => {
+  const { account } = useWeb3React();
   const { addressToName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
+  const { tryActivation } = useWalletActivation();
 
-  function Create() {}
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const { callback: registerCallback } = useRegisterCallback(name);
+  const Create = useCallback(async () => {
+    if (!account) {
+      await tryActivation();
+      return;
+    }
+    if (loading) return;
+    setLoading(true);
+    try {
+      await registerCallback?.();
+    } catch (e) {
+      console.log('vote failed');
+      console.log(e);
+    }
+    if (mounted.current) {
+      setLoading(false);
+    }
+  }, [account, loading, registerCallback, tryActivation]);
 
   //
   // const [links, setLinks] = useState([]);
@@ -94,10 +126,16 @@ const YourCode = (props: ModalProps) => {
             <p className={'font-normal'}>Your dibs code can contain use lowercase, uppercase Letters and numbers</p>
           </div>
           <section className={'mt-8 flex gap-4 items-center'}>
-            <Input className={'flex-auto'} value={'xxxxx'} label={'Your Code'} placeholder={'Enter Amount'} />
-            <Input className={'flex-auto'} value={'xxxxx'} label={'Your Referral Code'} placeholder={'Enter Amount'} />
+            <Input
+              className={'flex-auto'}
+              value={name}
+              onUserInput={setName}
+              label={'Your Code'}
+              placeholder={'Enter Amount'}
+            />
+            <Input className={'flex-auto'} label={'Your Referral Code'} placeholder={'Enter Amount'} />
             <button className={'btn-primary btn-large font-medium mt-4 px-12'} onClick={Create}>
-              Create
+              {account ? 'Create' : 'Connect Wallet'}
             </button>
           </section>
         </main>
