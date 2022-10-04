@@ -3,8 +3,10 @@ import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
+import { isSupportedChain, SupportedChainId } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import { useRegisterCallback } from 'hooks/dibs/useRegisterCallback';
+import useSelectChain from 'hooks/useSelectChain';
 import useWalletActivation from 'hooks/useWalletActivation';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { copyToClipboard } from 'utils/index';
@@ -20,7 +22,7 @@ export interface ModalPropsInterface extends React.HTMLAttributes<HTMLElement> {
 export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 
 const YourCode = (props: ModalProps) => {
-  const { account } = useWeb3React();
+  const { chainId, account } = useWeb3React();
   const { addressToName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
   const { tryActivation } = useWalletActivation();
@@ -36,9 +38,14 @@ const YourCode = (props: ModalProps) => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const { callback: registerCallback } = useRegisterCallback(name);
-  const Create = useCallback(async () => {
+  const selectChain = useSelectChain();
+  const create = useCallback(async () => {
     if (!account) {
       await tryActivation();
+      return;
+    }
+    if (!isSupportedChain(chainId)) {
+      await selectChain(SupportedChainId.GOERLI);
       return;
     }
     if (loading) return;
@@ -134,8 +141,8 @@ const YourCode = (props: ModalProps) => {
               placeholder={'Enter Amount'}
             />
             <Input className={'flex-auto'} label={'Your Referral Code'} placeholder={'Enter Amount'} />
-            <button className={'btn-primary btn-large font-medium mt-4 px-12'} onClick={Create}>
-              {account ? 'Create' : 'Connect Wallet'}
+            <button className={'btn-primary btn-large font-medium mt-4 px-12'} onClick={create}>
+              {account ? (isSupportedChain(chainId) ? 'Create' : 'Switch Network') : 'Connect Wallet'}
             </button>
           </section>
         </main>
