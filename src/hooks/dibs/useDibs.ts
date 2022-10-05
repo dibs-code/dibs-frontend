@@ -40,16 +40,16 @@ export function useDibs() {
 
   const [parentResult] = useSingleContractWithCallData(dibsContract, parentCall);
 
-  const parent: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> | undefined = parentResult?.result?.[0];
-
+  const parent: ContractFunctionReturnType<Dibs['callStatic']['parents']> | undefined = parentResult?.result?.[0];
+  console.log({ parent });
   const parentCodeNameCall = useMemo(() => {
     if (!parent || parent === ZERO_ADDRESS) return [];
-    return [dibsInterface.encodeFunctionData('codeToName', [parent])];
+    return [dibsInterface.encodeFunctionData('getCodeName', [parent])];
   }, [parent]);
 
   const [parentCodeNameResult] = useSingleContractWithCallData(dibsContract, parentCodeNameCall);
 
-  const parentCodeName: ContractFunctionReturnType<Dibs['callStatic']['addressToCode']> =
+  const parentCodeName: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> =
     parentCodeNameResult?.result?.[0] || '';
 
   return { addressToName, parentCodeName };
