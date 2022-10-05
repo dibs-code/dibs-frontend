@@ -49,6 +49,7 @@ module.exports = {
       backgroundImage: {
         'token-left': "url('/img/tokenLeft-background.svg')",
         gradient: 'linear-gradient(135deg,#5158f6,#822df5 33.76%,#f3a761)',
+        lottery: 'linear-gradient(62.08deg, #F9DEDE 8.16%, #DCDEFD 104.78%);',
         'presale-header': "url('/img/presale-header.svg')",
         nocode: "url('../public/nocode.png')",
         codeinfo: "url('../public/codeinfobg.png')",

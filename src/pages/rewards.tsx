@@ -40,7 +40,7 @@ const Rewards = () => {
           </header>
 
             <main>
-              <section className={'mb-24'}>
+              <section className={'mb-20'}>
                 <header className={'text-black items-center mb-8 px-6 py-2 bg-white inline-flex gap-4 inline-block rounded-lg shadow-header'}>
                   <FontAwesomeIcon style={{ fontSize: 24 }} icon={faCircleDollarToSlot}></FontAwesomeIcon>
                   <p className={'text-22 mt-0.5'}>Earned Fees</p>
@@ -67,19 +67,16 @@ const Rewards = () => {
               </section>
 
               <section>
-                <header className={'text-black items-center mb-8 px-6 py-2 bg-white inline-flex gap-4 inline-block rounded-lg shadow-header'}>
+                <header className={'text-black items-center mb-6 px-6 py-2 bg-white inline-flex gap-4 inline-block rounded-lg shadow-header'}>
                   <FontAwesomeIcon style={{ fontSize: 24 }} icon={faTicket}></FontAwesomeIcon>
                   <p className={'text-22 mt-0.5'}>Lottery Tickets</p>
                 </header>
-                <main></main>
+                <main>
+                  <p className={'mb-2 pl-1'}>[A brief explaination about how this works and what you should do ]</p>
+                  <div className={'bg-lottery rounded-2xl h-96 px-24'}></div>
+                </main>
               </section>
 
-              <div className={'rounded-2xl text-xl bg-nocode bg-cover'}>
-                <p className={'text-2xl font-normal h-64 px-24 text-center flex justify-center items-center'}>
-                  You didn’t create your dibs code yet,<br></br>
-                  Create one and start earning!
-                </p>
-              </div>
 
 
             </main>
