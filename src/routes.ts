@@ -1,5 +1,8 @@
 export enum RoutePath {
   HOME = '/',
+  REWARDS = '/rewards',
+  REPORTS = '/reports',
+  TEST_SWAP = '/test-swap',
 }
 
 export function getRoute(path: RoutePath, params?: { [key: string]: string }) {
