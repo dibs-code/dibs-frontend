@@ -1,6 +1,7 @@
 import { faCircleC, faFileChartColumn, faGift } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
+import { isSupportedChain } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import useWalletActivation from 'hooks/useWalletActivation';
 import React, { PropsWithChildren, useMemo } from 'react';
@@ -23,7 +24,7 @@ const Sidenav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const { addressToName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
   const links = [
@@ -62,7 +63,7 @@ const Sidenav = () => {
       <ul className={'pl-2 mt-16 mb-24'}>
         {links.map((link) => {
           const active = location.pathname === link.address;
-          const disabled = !account && link.address !== RoutePath.HOME;
+          const disabled = (!account || !isSupportedChain(chainId)) && link.address !== RoutePath.HOME;
           return (
             <li
               onClick={() => {
@@ -84,7 +85,7 @@ const Sidenav = () => {
         })}
       </ul>
     ),
-    [account, links, location.pathname, navigate],
+    [account, chainId, links, location.pathname, navigate],
   );
 
   return (
