@@ -32,6 +32,7 @@ const Input = (props: InputProps) => {
         <div className={'input-icon'}></div>
         {/*todo remove focus on input*/}
         <input
+          disabled={props.disabled}
           type={props.type}
           value={value}
           placeholder={placeholder}

@@ -23,7 +23,7 @@ export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 
 const YourCode = (props: ModalProps) => {
   const { chainId, account } = useWeb3React();
-  const { addressToName } = useDibs();
+  const { addressToName, parentCodeName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
   const { tryActivation } = useWalletActivation();
 
@@ -140,7 +140,13 @@ const YourCode = (props: ModalProps) => {
               label={'Your Code'}
               placeholder={'Enter Amount'}
             />
-            <Input className={'flex-auto'} label={'Your Referral Code'} placeholder={'Enter Amount'} />
+            <Input
+              value={parentCodeName}
+              disabled={true}
+              className={'flex-auto'}
+              label={'Your Referral Code'}
+              placeholder={'Enter Amount'}
+            />
             <button className={'btn-primary btn-large font-medium mt-4 px-12'} onClick={create}>
               {account ? (isSupportedChain(chainId) ? 'Create' : 'Switch Network') : 'Connect Wallet'}
             </button>

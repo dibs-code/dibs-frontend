@@ -1,6 +1,7 @@
 import { Interface } from '@ethersproject/abi';
 import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
+import { ZERO_ADDRESS } from 'constants/addresses';
 import { useDibsContract } from 'hooks/useContract';
 import { useSingleContractWithCallData } from 'lib/hooks/multicall';
 import { useMemo } from 'react';
@@ -21,25 +22,35 @@ export type ContractFunctionReturnType<T> = T extends (...args: any) => Promise<
 export function useDibs() {
   const dibsContract = useDibsContract();
   const { account } = useWeb3React();
-  const addressToCodeCall = useMemo(() => {
+
+  const addressToNameCall = useMemo(() => {
     if (!account) return [];
-    return [dibsInterface.encodeFunctionData('addressToCode', [account])];
+    return [dibsInterface.encodeFunctionData('getCodeName', [account])];
   }, [account]);
 
-  const [addressToCodeResult] = useSingleContractWithCallData(dibsContract, addressToCodeCall);
+  const [addressToNameResult] = useSingleContractWithCallData(dibsContract, addressToNameCall);
 
-  const addressToCode: ContractFunctionReturnType<Dibs['callStatic']['addressToCode']> | undefined =
-    addressToCodeResult?.result?.[0];
+  const addressToName: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> | undefined =
+    addressToNameResult?.result?.[0];
 
-  const codeToNameCall = useMemo(() => {
-    if (!addressToCode) return [];
-    return [dibsInterface.encodeFunctionData('codeToName', [addressToCode])];
-  }, [addressToCode]);
+  const parentCall = useMemo(() => {
+    if (!account) return [];
+    return [dibsInterface.encodeFunctionData('parents', [account])];
+  }, [account]);
 
-  const [codeToNameResult] = useSingleContractWithCallData(dibsContract, codeToNameCall);
+  const [parentResult] = useSingleContractWithCallData(dibsContract, parentCall);
 
-  const addressToName: ContractFunctionReturnType<Dibs['callStatic']['addressToCode']> | undefined =
-    codeToNameResult?.result?.[0];
+  const parent: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> | undefined = parentResult?.result?.[0];
 
-  return { addressToName };
+  const parentCodeNameCall = useMemo(() => {
+    if (!parent || parent === ZERO_ADDRESS) return [];
+    return [dibsInterface.encodeFunctionData('codeToName', [parent])];
+  }, [parent]);
+
+  const [parentCodeNameResult] = useSingleContractWithCallData(dibsContract, parentCodeNameCall);
+
+  const parentCodeName: ContractFunctionReturnType<Dibs['callStatic']['addressToCode']> =
+    parentCodeNameResult?.result?.[0] || '';
+
+  return { addressToName, parentCodeName };
 }

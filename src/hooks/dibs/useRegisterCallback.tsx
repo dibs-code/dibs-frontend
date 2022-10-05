@@ -32,7 +32,7 @@ export function useRegisterCallback(name: string): UseCallbackReturns {
       },
     ];
   }, [dibsContract, account, name]);
-  console.log({ calls });
+
   const info: RegisterTransactionInfo = {
     type: TransactionType.REGISTER,
     name,
