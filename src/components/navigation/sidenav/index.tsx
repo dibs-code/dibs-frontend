@@ -1,6 +1,7 @@
-import { faCircleC, faFileChartColumn, faGift } from '@fortawesome/pro-solid-svg-icons';
+import { faCircleC, faFileChartColumn, faGift, faRightLeft } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
+import WalletModal from "components/modal/wallet";
 import { isSupportedChain } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import useWalletActivation from 'hooks/useWalletActivation';
@@ -24,6 +25,16 @@ const Sidenav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [open, setOpen] = React.useState(false)
+
+  function closeModal() {
+    setOpen(false)
+  }
+
+  const handleConnect = async () => {
+    setOpen(true)
+  }
+
   const { account, chainId } = useWeb3React();
   const { addressToName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
@@ -31,7 +42,7 @@ const Sidenav = () => {
     { name: 'Your code', icon: faCircleC, address: RoutePath.HOME },
     { name: 'Rewards', icon: faGift, address: RoutePath.REWARDS },
     { name: 'Reports', icon: faFileChartColumn, address: RoutePath.REPORTS },
-    { name: 'Test Swap', icon: faGift, address: RoutePath.TEST_SWAP },
+    { name: 'Test swap', icon: faRightLeft, address: RoutePath.TEST_SWAP },
   ];
 
   const { tryActivation, disconnectWallet } = useWalletActivation();
@@ -50,11 +61,15 @@ const Sidenav = () => {
         </p>
       </>
     ) : (
+      <>
+
+        <WalletModal closeModal={closeModal} open={open} hide={() => setOpen(!open)} />
       <div className={'flex justify-center'}>
-        <button className={'btn-primary-inverted btn-medium text-center'} onClick={tryActivation}>
+        <button className={'btn-primary-inverted btn-medium text-center'} onClick={handleConnect}>
           Connect Wallet
         </button>
       </div>
+        </>
     );
   };
 
