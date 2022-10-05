@@ -65,7 +65,7 @@ const Sidenav = () => {
 
         <WalletModal closeModal={closeModal} open={open} hide={() => setOpen(!open)} />
       <div className={'flex justify-center'}>
-        <button className={'btn-primary-inverted btn-medium text-center'} onClick={handleConnect}>
+        <button className={'btn-primary-inverted btn-medium text-center'} onClick={tryActivation}>
           Connect Wallet
         </button>
       </div>

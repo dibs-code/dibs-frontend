@@ -6,8 +6,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        22: '22px'
+      },
       width: {
         68: '17rem',
+        92: "23rem",
+        88: "22rem",
+        84: "21rem",
         100: '25rem',
         104: '26rem',
       },
@@ -51,9 +57,12 @@ module.exports = {
         'gradient-light': "radial-gradient(62.15% 4494.21% at 43.37% 31.6%, rgba(239, 71, 111, 0.1) 0%, rgba(94, 87, 145, 0.1) 100%)",
         blob: "url('/img/blob-bg.svg')",
         blur: "url('/img/blur-bg.svg')",
+        tf: "url('../public/tf-bg.svg')",
+        cf: "url('../public/cf-bg.svg')",
       },
-      dropShadow: {
+      boxShadow: {
         'primary-xl': '0px 8px 18px rgba(81, 88, 246, 0.15)',
+        header: '0px 4px 12px rgba(0, 0, 0, 0.07)',
       },
       zIndex: {
         100: '100',
