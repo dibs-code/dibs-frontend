@@ -20,10 +20,14 @@ export type ContractFunctionReturnType<T> = T extends (...args: any) => Promise<
     : R
   : any;
 
-export type BalanceToClaimObject = {
+export interface BalanceObject {
   tokenAddress: string;
   balance: BigNumber;
-};
+}
+
+export interface AccBalanceObject extends BalanceObject {
+  claimedBalance: BigNumber;
+}
 
 export function useDibs() {
   const dibsContract = useDibsContract();
@@ -74,21 +78,53 @@ export function useDibs() {
     return tokens;
   }, [userTokensResult]);
 
-  const balancesToClaimCall = useMemo(() => {
+  const accBalancesCall = useMemo(() => {
     if (!account) return [];
     return userTokens.map((tokenAddress) => [tokenAddress, account]);
   }, [account, userTokens]);
 
-  const balancesToClaimResult = useSingleContractMultipleData(dibsContract, 'accBalance', balancesToClaimCall);
-  console.log({ balancesToClaimResult });
-  const balancesToClaim = useMemo((): BalanceToClaimObject[] => {
-    const balancesToClaimResultLoaded = balancesToClaimResult.filter((r) => !!r.result);
-    if (balancesToClaimResultLoaded.length < userTokens.length) return [];
+  const accBalancesResult = useSingleContractMultipleData(dibsContract, 'accBalance', accBalancesCall);
+
+  const claimedBalancesCall = useMemo(() => {
+    if (!account) return [];
+    return userTokens.map((tokenAddress) => [tokenAddress, account]);
+  }, [account, userTokens]);
+
+  const claimedBalancesResult = useSingleContractMultipleData(dibsContract, 'accBalance', claimedBalancesCall);
+
+  const balances = useMemo((): AccBalanceObject[] => {
+    const accBalancesResultLoaded = accBalancesResult.filter((r) => !!r.result);
+    if (accBalancesResultLoaded.length < userTokens.length) return [];
+    const claimedBalancesResultLoaded = claimedBalancesResult.filter((r) => !!r.result);
+    if (claimedBalancesResultLoaded.length < userTokens.length) return [];
     return userTokens.map((tokenAddress, i) => ({
       tokenAddress,
-      balance: balancesToClaimResultLoaded[i]!.result![0],
+      balance: accBalancesResultLoaded[i]!.result![0],
+      claimedBalance: claimedBalancesResultLoaded[i]!.result![0],
     }));
-  }, [balancesToClaimResult, userTokens]);
+  }, [accBalancesResult, claimedBalancesResult, userTokens]);
 
-  return { addressToName, parentCodeName, userTokensResult, balancesToClaim };
+  const claimedBalances = useMemo((): BalanceObject[] => {
+    return balances.map((b) => ({
+      balance: b.claimedBalance,
+      tokenAddress: b.tokenAddress,
+    }));
+  }, [balances]);
+
+  const balancesToClaim = useMemo(() => {
+    if (!dibsContract || !account) return [];
+    const balancesToClaim: BalanceObject[] = [];
+    balances.forEach((b) => {
+      const balanceToClaim = BigNumber.from(b.balance).sub(b.claimedBalance);
+      if (balanceToClaim && !balanceToClaim.isZero()) {
+        balancesToClaim.push({
+          tokenAddress: b.tokenAddress,
+          balance: balanceToClaim,
+        });
+      }
+    });
+    return balancesToClaim;
+  }, [account, balances, dibsContract]);
+
+  return { addressToName, parentCodeName, userTokensResult, balances, balancesToClaim, claimedBalances };
 }

@@ -4,6 +4,7 @@ import React from 'react';
 
 import {
   ApproveTransactionInfo,
+  ClaimAllTransactionInfo,
   RegisterTransactionInfo,
   RewardTransactionInfo,
   TransactionInfo,
@@ -57,6 +58,10 @@ function RewardSummary({ info }: { info: RewardTransactionInfo }) {
   );
 }
 
+function ClaimAllSummary({ info }: { info: ClaimAllTransactionInfo }) {
+  return <span>Claimed successfully</span>;
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.APPROVAL:
@@ -67,5 +72,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.REWARD:
       return <RewardSummary info={info} />;
+
+    case TransactionType.CLAIM_ALL:
+      return <ClaimAllSummary info={info} />;
   }
 }

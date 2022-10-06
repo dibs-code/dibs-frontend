@@ -3,12 +3,13 @@ import { faCircleDollarToSlot, faTicket } from '@fortawesome/pro-solid-svg-icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CurrencyAmount } from '@uniswap/sdk-core';
 import Sidenav from 'components/navigation/sidenav';
-import { BalanceToClaimObject, useDibs } from 'hooks/dibs/useDibs';
+import useClaimAllCallback from 'hooks/dibs/useClaimAllCallback';
+import { BalanceObject, useDibs } from 'hooks/dibs/useDibs';
 import { useToken } from 'hooks/Tokens';
 import JSBI from 'jsbi';
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-const BalanceToClaim = (props: { obj: BalanceToClaimObject }) => {
+const AccBalance = (props: { obj: BalanceObject }) => {
   const token = useToken(props.obj.tokenAddress);
   const balance = useMemo(() => {
     if (!token) return '';
@@ -23,7 +24,32 @@ const BalanceToClaim = (props: { obj: BalanceToClaimObject }) => {
 };
 
 const Rewards = () => {
-  const { balancesToClaim } = useDibs();
+  const { balancesToClaim, claimedBalances } = useDibs();
+
+  const { callback: claimAllCallback } = useClaimAllCallback();
+
+  const [loading, setLoading] = useState(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  const claimAll = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await claimAllCallback?.();
+    } catch (e) {
+      console.log('swap failed');
+      console.log(e);
+    }
+    if (mounted.current) {
+      setLoading(false);
+    }
+  }, [loading, claimAllCallback]);
 
   return (
     <div className={'px-40 py-14'}>
@@ -51,16 +77,22 @@ const Rewards = () => {
                     <button className={'btn-small btn-link absolute -right-2 -top-0.5'}>{`Claim separately ->`}</button>
                   </label>
                   {balancesToClaim.map((b) => (
-                    <BalanceToClaim key={b.tokenAddress} obj={b} />
+                    <AccBalance key={b.tokenAddress} obj={b} />
                   ))}
                   <footer className={'mt-20 pt-1 text-right'}>
-                    {balancesToClaim.length ? <button className={'btn-medium btn-primary'}>Claim All</button> : null}
+                    {balancesToClaim.length ? (
+                      <button className={'btn-medium btn-primary'} onClick={claimAll}>
+                        Claim All
+                      </button>
+                    ) : null}
                   </footer>
                 </div>
 
                 <div className={'bg-tf bg-cover pl-8 pr-4 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 inline-block font-light'}>Total fees claimed</label>
-                  <h2>29.03 USDC</h2>
+                  {claimedBalances.map((b) => (
+                    <AccBalance key={b.tokenAddress} obj={b} />
+                  ))}
                   <footer className={'mt-20 pt-1 text-right'}>
                     <button className={'btn-medium text-lg btn-link'}>{`Claim History ->`}</button>
                   </footer>
@@ -85,8 +117,6 @@ const Rewards = () => {
           </main>
         </>
       </main>
-      {/*<div>{renderConnector()}*/}
-      {/*</div>*/}
     </div>
   );
 };
