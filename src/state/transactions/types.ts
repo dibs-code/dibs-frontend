@@ -16,6 +16,7 @@ export interface SerializableTransactionReceipt {
 export enum TransactionType {
   APPROVAL,
   REGISTER,
+  REWARD,
 }
 
 export interface BaseTransactionInfo {
@@ -34,7 +35,12 @@ export interface RegisterTransactionInfo extends BaseTransactionInfo {
   name: string;
 }
 
-export type TransactionInfo = ApproveTransactionInfo | RegisterTransactionInfo;
+export interface RewardTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.REWARD;
+  parentName: string;
+}
+
+export type TransactionInfo = ApproveTransactionInfo | RegisterTransactionInfo | RewardTransactionInfo;
 
 export interface TransactionDetails {
   hash: string;

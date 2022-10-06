@@ -5,6 +5,7 @@ import React from 'react';
 import {
   ApproveTransactionInfo,
   RegisterTransactionInfo,
+  RewardTransactionInfo,
   TransactionInfo,
   TransactionType,
 } from '../../state/transactions/types';
@@ -48,6 +49,14 @@ function RegisterSummary({ info }: { info: RegisterTransactionInfo }) {
   );
 }
 
+function RewardSummary({ info }: { info: RewardTransactionInfo }) {
+  return (
+    <span>
+      Reward to <span className={'font-bold'}>{info.parentName}</span>
+    </span>
+  );
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.APPROVAL:
@@ -55,5 +64,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.REGISTER:
       return <RegisterSummary info={info} />;
+
+    case TransactionType.REWARD:
+      return <RewardSummary info={info} />;
   }
 }

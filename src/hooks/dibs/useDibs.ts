@@ -41,7 +41,7 @@ export function useDibs() {
   const [parentResult] = useSingleContractWithCallData(dibsContract, parentCall);
 
   const parent: ContractFunctionReturnType<Dibs['callStatic']['parents']> | undefined = parentResult?.result?.[0];
-  console.log({ parent });
+
   const parentCodeNameCall = useMemo(() => {
     if (!parent || parent === ZERO_ADDRESS) return [];
     return [dibsInterface.encodeFunctionData('getCodeName', [parent])];

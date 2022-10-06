@@ -35,6 +35,7 @@ const Input = (props: InputProps) => {
           disabled={props.disabled}
           type={props.type}
           value={value}
+          style={{ width: '100%' }}
           placeholder={placeholder}
           className={'focus:outline-0'}
           onChange={(e) => (onUserInput ? onUserInput(e.target.value) : null)}

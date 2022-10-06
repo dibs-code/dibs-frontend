@@ -7,6 +7,7 @@ import Rewards from 'pages/rewards';
 import TestSwap from 'pages/TestSwap';
 import React, { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'state/hooks';
 
 import RoutePath from './routes';
 
@@ -14,11 +15,14 @@ function App() {
   const { account, chainId } = useWeb3React();
   const location = useLocation();
   const navigate = useNavigate();
+  const selectedWallet = useAppSelector((state) => state.user.selectedWallet);
   useEffect(() => {
-    if ((!account || !isSupportedChain(chainId)) && location.pathname !== RoutePath.HOME) {
-      navigate(RoutePath.HOME);
+    const walletNotConnected = !selectedWallet;
+    const walletLoadedAndHasWrongChain = chainId && !isSupportedChain(chainId);
+    if ((walletNotConnected || walletLoadedAndHasWrongChain) && location.pathname !== RoutePath.HOME) {
+      navigate(RoutePath.HOME, { replace: true });
     }
-  }, [account, chainId, location.pathname, navigate]);
+  }, [chainId, location, navigate, selectedWallet]);
   return (
     <Routes>
       <Route path={RoutePath.HOME} element={<Home />} />

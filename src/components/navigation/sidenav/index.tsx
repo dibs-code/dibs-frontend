@@ -44,6 +44,7 @@ const Sidenav = () => {
     [],
   );
   const { tryActivation, disconnectWallet } = useWalletActivation();
+
   const renderConnector = () => {
     return account ? (
       <>
