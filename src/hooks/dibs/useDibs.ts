@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
 import { ZERO_ADDRESS } from 'constants/addresses';
 import { useDibsContract } from 'hooks/useContract';
-import { useSingleContractWithCallData } from 'lib/hooks/multicall';
+import { useSingleContractMultipleData, useSingleContractWithCallData } from 'lib/hooks/multicall';
 import { useMemo } from 'react';
 
 import { Dibs } from '../../abis/types';
@@ -52,5 +52,36 @@ export function useDibs() {
   const parentCodeName: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> =
     parentCodeNameResult?.result?.[0] || '';
 
-  return { addressToName, parentCodeName };
+  const userTokensCount = 10;
+
+  const userTokensCall = useMemo(() => {
+    if (!account) return [];
+    return Array.from(Array(userTokensCount).keys()).map((i) => [account, i]);
+  }, [account]);
+
+  const userTokensResult = useSingleContractMultipleData(dibsContract, 'userTokens', userTokensCall);
+  const userTokens = useMemo(() => {
+    const tokens: string[] = [];
+    userTokensResult.forEach((r) => {
+      if (r.result) tokens.push(r.result[0]);
+    });
+    return tokens;
+  }, [userTokensResult]);
+
+  const toClaimBalancesCall = useMemo(() => {
+    if (!account) return [];
+    return userTokens.map((tokenAddress) => [tokenAddress, account]);
+  }, [account, userTokens]);
+
+  const toClaimBalancesResult = useSingleContractMultipleData(dibsContract, 'accBalance', toClaimBalancesCall);
+
+  const toClaimBalances = useMemo(() => {
+    if (toClaimBalancesResult.length < userTokens.length) return [];
+    return userTokens.map((tokenAddress, i) => ({
+      tokenAddress,
+      balance: toClaimBalancesResult[i]?.result?.[0],
+    }));
+  }, [toClaimBalancesResult, userTokens]);
+
+  return { addressToName, parentCodeName, userTokensResult, toClaimBalances };
 }

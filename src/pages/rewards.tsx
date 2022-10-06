@@ -2,11 +2,14 @@
 import { faCircleDollarToSlot, faTicket } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Sidenav from 'components/navigation/sidenav';
+import { useDibs } from 'hooks/dibs/useDibs';
 import React from 'react';
 // import Input from "components/basic/input";
 // import {isSupportedChain} from "constants/chains";
 
 const Rewards = () => {
+  const { toClaimBalances } = useDibs();
+
   return (
     <div className={'px-40 py-14'}>
       <Sidenav></Sidenav>
