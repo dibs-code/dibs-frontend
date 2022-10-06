@@ -6,6 +6,7 @@ import MulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/Uniswa
 import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
 import ERC20_ABI from 'abis/erc20.json';
+import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json';
 import { Dibs, Erc20 } from 'abis/types';
 import { DIBS_ADDRESS, MULTICALL_ADDRESS } from 'constants/addresses';
 import { Providers } from 'constants/providers';
@@ -73,6 +74,10 @@ export function useInterfaceMulticall() {
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
   return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible);
+}
+
+export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible);
 }
 
 export function useDibsContract() {

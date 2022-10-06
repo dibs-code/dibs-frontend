@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
 import Sidenav from 'components/navigation/sidenav';
 import { useTestSwapCallback } from 'hooks/dibs/useTestSwapCallback';
+import { useToken } from 'hooks/Tokens';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const TestSwap = () => {
@@ -17,13 +18,14 @@ const TestSwap = () => {
 
   const [totalFees, setTotalFees] = useState(0.01);
   const [totalVolume, setTotalVolume] = useState(10);
-  const [token, setToken] = useState('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984');
+  const [tokenAddress, setTokenAddress] = useState('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984');
+  const token = useToken(tokenAddress);
   const { callback: testSwapCallback } = useTestSwapCallback({
     user,
     parentName,
     totalFees,
     totalVolume,
-    token,
+    token: tokenAddress,
   });
 
   const [loading, setLoading] = useState(false);
@@ -86,13 +88,13 @@ const TestSwap = () => {
           />
           <Input
             className={'flex-auto'}
-            value={token}
-            onUserInput={setToken}
+            value={tokenAddress}
+            onUserInput={setTokenAddress}
             label={'Token Address'}
             placeholder={'Enter Address'}
           />
           <button className={'btn-primary btn-large font-medium mt-6 px-12'} onClick={create}>
-            Swap
+            Swap {token ? token.symbol : 'Unknown'}
           </button>
         </section>
       </main>

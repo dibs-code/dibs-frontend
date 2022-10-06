@@ -6,6 +6,7 @@ import { isTestEnv } from 'utils/env';
 
 import application from './application/reducer';
 import { updateVersion } from './global/actions';
+import lists from './lists/reducer';
 import transactions from './transactions/reducer';
 import user from './user/reducer';
 
@@ -17,6 +18,7 @@ const store = configureStore({
     user,
     transactions,
     multicall: multicall.reducer,
+    lists,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
