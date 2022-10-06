@@ -42,7 +42,7 @@ export function useTestSwapCallback(props: {
           dibsContract.interface.encodeFunctionData('reward', [
             user,
             parentCode,
-            BigNumber.from(totalFees * 1000).mul(BigNumber.from(10).pow(15)),
+            BigNumber.from(totalFees * 1000000).mul(BigNumber.from(10).pow(12)),
             totalVolume,
             token,
           ]) ?? '',
