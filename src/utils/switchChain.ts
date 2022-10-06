@@ -10,6 +10,7 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
     case SupportedChainId.RINKEBY:
     // case SupportedChainId.ROPSTEN:
     // case SupportedChainId.KOVAN:
+    // eslint-disable-next-line no-fallthrough
     case SupportedChainId.GOERLI:
       return [RPC_URLS[chainId]];
     // case SupportedChainId.OPTIMISM:

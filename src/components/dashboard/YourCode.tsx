@@ -59,7 +59,7 @@ const YourCode = (props: ModalProps) => {
     if (mounted.current) {
       setLoading(false);
     }
-  }, [account, loading, registerCallback, tryActivation]);
+  }, [account, chainId, loading, registerCallback, selectChain, tryActivation]);
 
   //
   // const [links, setLinks] = useState([]);

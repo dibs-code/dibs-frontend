@@ -1,7 +1,7 @@
 import { faCircleC, faFileChartColumn, faGift, faRightLeft } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
-import WalletModal from "components/modal/wallet";
+import WalletModal from 'components/modal/wallet';
 import { isSupportedChain } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import useWalletActivation from 'hooks/useWalletActivation';
@@ -25,26 +25,24 @@ const Sidenav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   function closeModal() {
-    setOpen(false)
-  }
-
-  const handleConnect = async () => {
-    setOpen(true)
+    setOpen(false);
   }
 
   const { account, chainId } = useWeb3React();
   const { addressToName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
-  const links = [
-    { name: 'Your code', icon: faCircleC, address: RoutePath.HOME },
-    { name: 'Rewards', icon: faGift, address: RoutePath.REWARDS },
-    { name: 'Reports', icon: faFileChartColumn, address: RoutePath.REPORTS },
-    { name: 'Test swap', icon: faRightLeft, address: RoutePath.TEST_SWAP },
-  ];
-
+  const links = useMemo(
+    () => [
+      { name: 'Your code', icon: faCircleC, address: RoutePath.HOME },
+      { name: 'Rewards', icon: faGift, address: RoutePath.REWARDS },
+      { name: 'Reports', icon: faFileChartColumn, address: RoutePath.REPORTS },
+      { name: 'Test swap', icon: faRightLeft, address: RoutePath.TEST_SWAP },
+    ],
+    [],
+  );
   const { tryActivation, disconnectWallet } = useWalletActivation();
   const renderConnector = () => {
     return account ? (
@@ -62,14 +60,13 @@ const Sidenav = () => {
       </>
     ) : (
       <>
-
         <WalletModal closeModal={closeModal} open={open} hide={() => setOpen(!open)} />
-      <div className={'flex justify-center'}>
-        <button className={'btn-primary-inverted btn-medium text-center'} onClick={tryActivation}>
-          Connect Wallet
-        </button>
-      </div>
-        </>
+        <div className={'flex justify-center'}>
+          <button className={'btn-primary-inverted btn-medium text-center'} onClick={tryActivation}>
+            Connect Wallet
+          </button>
+        </div>
+      </>
     );
   };
 
