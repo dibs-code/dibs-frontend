@@ -54,7 +54,7 @@ const Rewards = () => {
                     <BalanceToClaim key={b.tokenAddress} obj={b} />
                   ))}
                   <footer className={'mt-20 pt-1 text-right'}>
-                    <button className={'btn-medium btn-primary'}>Claim All</button>
+                    {balancesToClaim.length ? <button className={'btn-medium btn-primary'}>Claim All</button> : null}
                   </footer>
                 </div>
 
