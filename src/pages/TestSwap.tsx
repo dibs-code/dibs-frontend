@@ -39,6 +39,10 @@ const TestSwap = () => {
 
   const create = useCallback(async () => {
     if (loading) return;
+    if (!parentName) {
+      alert('Parent Code is required');
+      return;
+    }
     setLoading(true);
     try {
       await testSwapCallback?.();
@@ -49,7 +53,7 @@ const TestSwap = () => {
     if (mounted.current) {
       setLoading(false);
     }
-  }, [loading, testSwapCallback]);
+  }, [loading, parentName, testSwapCallback]);
 
   return (
     <div className={'px-40 py-14'}>
