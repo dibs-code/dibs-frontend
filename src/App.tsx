@@ -12,7 +12,7 @@ import { useAppSelector } from 'state/hooks';
 import RoutePath from './routes';
 
 function App() {
-  const { account, chainId } = useWeb3React();
+  const { chainId } = useWeb3React();
   const location = useLocation();
   const navigate = useNavigate();
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet);

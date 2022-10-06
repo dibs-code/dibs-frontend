@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber';
 import { keccak256 } from '@ethersproject/keccak256';
 import { TransactionResponse } from '@ethersproject/providers';
 import { toUtf8Bytes } from '@ethersproject/strings';
@@ -38,7 +39,13 @@ export function useTestSwapCallback(props: {
       {
         address: dibsContract.address,
         calldata:
-          dibsContract.interface.encodeFunctionData('reward', [user, parentCode, totalFees, totalVolume, token]) ?? '',
+          dibsContract.interface.encodeFunctionData('reward', [
+            user,
+            parentCode,
+            BigNumber.from(totalFees * 1000).mul(BigNumber.from(10).pow(15)),
+            totalVolume,
+            token,
+          ]) ?? '',
         value: '0x0',
       },
     ];

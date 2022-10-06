@@ -15,9 +15,9 @@ const TestSwap = () => {
   }, [account]);
   const [parentName, setParentName] = useState('');
 
-  const [totalFees, setTotalFees] = useState(1);
-  const [totalVolume, setTotalVolume] = useState(1000);
-  const [token, setToken] = useState('0x7af963cf6d228e564e2a0aa0ddbf06210b38615d');
+  const [totalFees, setTotalFees] = useState(0.01);
+  const [totalVolume, setTotalVolume] = useState(10);
+  const [token, setToken] = useState('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984');
   const { callback: testSwapCallback } = useTestSwapCallback({
     user,
     parentName,
