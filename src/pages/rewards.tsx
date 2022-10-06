@@ -1,14 +1,29 @@
 // import {faCopy} from "@fortawesome/pro-regular-svg-icons";
 import { faCircleDollarToSlot, faTicket } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CurrencyAmount } from '@uniswap/sdk-core';
 import Sidenav from 'components/navigation/sidenav';
-import { useDibs } from 'hooks/dibs/useDibs';
-import React from 'react';
-// import Input from "components/basic/input";
-// import {isSupportedChain} from "constants/chains";
+import { BalanceToClaimObject, useDibs } from 'hooks/dibs/useDibs';
+import { useToken } from 'hooks/Tokens';
+import JSBI from 'jsbi';
+import React, { useMemo } from 'react';
+
+const BalanceToClaim = (props: { obj: BalanceToClaimObject }) => {
+  const token = useToken(props.obj.tokenAddress);
+  const balance = useMemo(() => {
+    if (!token) return '';
+    const amount = JSBI.BigInt(props.obj.balance.toString());
+    return CurrencyAmount.fromRawAmount(token, amount).toSignificant(5);
+  }, [props.obj.balance, token]);
+  return (
+    <h2>
+      {balance} {token?.symbol}{' '}
+    </h2>
+  );
+};
 
 const Rewards = () => {
-  const { toClaimBalances } = useDibs();
+  const { balancesToClaim } = useDibs();
 
   return (
     <div className={'px-40 py-14'}>
@@ -35,7 +50,9 @@ const Rewards = () => {
                     Claimable fees{' '}
                     <button className={'btn-small btn-link absolute -right-2 -top-0.5'}>{`Claim separately ->`}</button>
                   </label>
-                  <h2>29.03 USDC</h2>
+                  {balancesToClaim.map((b) => (
+                    <BalanceToClaim key={b.tokenAddress} obj={b} />
+                  ))}
                   <footer className={'mt-20 pt-1 text-right'}>
                     <button className={'btn-medium btn-primary'}>Claim All</button>
                   </footer>

@@ -1,4 +1,5 @@
 import { Interface } from '@ethersproject/abi';
+import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
 import { ZERO_ADDRESS } from 'constants/addresses';
@@ -18,6 +19,11 @@ export type ContractFunctionReturnType<T> = T extends (...args: any) => Promise<
     ? void
     : R
   : any;
+
+export type BalanceToClaimObject = {
+  tokenAddress: string;
+  balance: BigNumber;
+};
 
 export function useDibs() {
   const dibsContract = useDibsContract();
@@ -68,20 +74,21 @@ export function useDibs() {
     return tokens;
   }, [userTokensResult]);
 
-  const toClaimBalancesCall = useMemo(() => {
+  const balancesToClaimCall = useMemo(() => {
     if (!account) return [];
     return userTokens.map((tokenAddress) => [tokenAddress, account]);
   }, [account, userTokens]);
 
-  const toClaimBalancesResult = useSingleContractMultipleData(dibsContract, 'accBalance', toClaimBalancesCall);
-
-  const toClaimBalances = useMemo(() => {
-    if (toClaimBalancesResult.length < userTokens.length) return [];
+  const balancesToClaimResult = useSingleContractMultipleData(dibsContract, 'accBalance', balancesToClaimCall);
+  console.log({ balancesToClaimResult });
+  const balancesToClaim = useMemo((): BalanceToClaimObject[] => {
+    const balancesToClaimResultLoaded = balancesToClaimResult.filter((r) => !!r.result);
+    if (balancesToClaimResultLoaded.length < userTokens.length) return [];
     return userTokens.map((tokenAddress, i) => ({
       tokenAddress,
-      balance: toClaimBalancesResult[i]?.result?.[0],
+      balance: balancesToClaimResultLoaded[i]!.result![0],
     }));
-  }, [toClaimBalancesResult, userTokens]);
+  }, [balancesToClaimResult, userTokens]);
 
-  return { addressToName, parentCodeName, userTokensResult, toClaimBalances };
+  return { addressToName, parentCodeName, userTokensResult, balancesToClaim };
 }
