@@ -1,5 +1,5 @@
 // import {faCopy} from "@fortawesome/pro-regular-svg-icons";
-import {faCircleDollarToSlot, faGift, faTicket} from '@fortawesome/pro-solid-svg-icons';
+import { faCircleDollarToSlot, faGift, faTicket } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CurrencyAmount } from '@uniswap/sdk-core';
 import Sidenav from 'components/navigation/sidenav';
@@ -29,13 +29,15 @@ const Rewards = () => {
   const { callback: claimAllCallback } = useClaimAllCallback();
 
   // Mock variable for Won lottery state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [wonLottery, setWonLottery] = useState(false);
 
   // Mock variable for Having past rewards that you didn't claimed
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [prePrize, setPrePrize] = useState(false);
 
   // Mock variable for type of reward (nft / token)
-  const [isNFT, setIsNFT] = useState(false);
+  // const [isNFT, setIsNFT] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const mounted = useRef(false);
@@ -122,11 +124,12 @@ const Rewards = () => {
                 <p className={'mb-2 pl-1'}>[A brief explaination about how this works and what you should do ]</p>
                 <div className={'lottery-card  px-12 py-8'}>
                   <section className={'flex justify-between '}>
-                    <div className={''}><h4 className={'mb-6'}>You have 32 tickets for this week&apos;s lottery</h4>
-                    <div>
-                      <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>
-                      <p className={'text-lg'}>Unfortunately, You didn&apos;t win the prize</p>
-                    </div>
+                    <div className={''}>
+                      <h4 className={'mb-6'}>You have 32 tickets for this week&apos;s lottery</h4>
+                      <div>
+                        <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>
+                        <p className={'text-lg'}>Unfortunately, You didn&apos;t win the prize</p>
+                      </div>
                     </div>
                     <div>
                       <div className={'px-4 py-4 bg-white rounded-xl shadow-lottery-inner-card'}>
@@ -138,27 +141,31 @@ const Rewards = () => {
 
                   <section className={'flex justify-between items-end '}>
                     <div>
-                      <img src={'/lottery-img.png'} className={'w-44 relative right-4'} />
-                      { prePrize && <div className={'inline-flex gap-2 mt-4 items-center px-3 py-2 bg-primary-light rounded-lg '}>
-                        <FontAwesomeIcon  style={{ fontSize: 20, }} icon={faGift}></FontAwesomeIcon>
-                        <p className={'font-normal'}>It seems you didn’t claim <button>your previous prize (2 Items)</button></p>
-                      </div> }
+                      <img src={'/lottery-img.png'} className={'w-44 relative right-4'} alt="lottery" />
+                      {prePrize && (
+                        <div className={'inline-flex gap-2 mt-4 items-center px-3 py-2 bg-primary-light rounded-lg '}>
+                          <FontAwesomeIcon style={{ fontSize: 20 }} icon={faGift}></FontAwesomeIcon>
+                          <p className={'font-normal'}>
+                            It seems you didn’t claim <button>your previous prize (2 Items)</button>
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     <div className={'pt-6'}>
                       <div className={'px-4 py-4 bg-white rounded-xl shadow-lottery-inner-card'}>
-                        { wonLottery ? (<div className={'flex flex-col py-0.5 gap-3 items-center'}><img src={'/sad-robo.png'} className={'w-22 '} />
-                        <p className={'font-normal text-gray px-0.5'}>There is nothing to claim</p></div>)
-                          :
-                          (<div className={'flex flex-col gap-4 items-center py-2'}>
-                            <img src={'/prize-token.png'} className={'w-20 '} />
+                        {wonLottery ? (
+                          <div className={'flex flex-col py-0.5 gap-3 items-center'}>
+                            <img src={'/sad-robo.png'} className={'w-22 '} alt="lottery lost" />
+                            <p className={'font-normal text-gray px-0.5'}>There is nothing to claim</p>
+                          </div>
+                        ) : (
+                          <div className={'flex flex-col gap-4 items-center py-2'}>
+                            <img src={'/prize-token.png'} className={'w-20 '} alt="lottery prize" />
                             <h4 className={'font-semibold px-7'}>3203.20 USDC</h4>
-                            <button className={'btn-medium btn-primary'}>
-                              Claim Your Prize
-                            </button>
-                          </div>)
-                        }
-
+                            <button className={'btn-medium btn-primary'}>Claim Your Prize</button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </section>
