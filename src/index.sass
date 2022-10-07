@@ -113,3 +113,12 @@ span
     &:last-child
       @apply text-label text-sm font-medium
 
+
+.lottery-card
+  @apply relative rounded-2xl
+  &:after
+    content: ""
+    @apply absolute inset-0 w-full h-full opacity-75 bg-lottery rounded-2xl
+    z-index: -1
+
+
