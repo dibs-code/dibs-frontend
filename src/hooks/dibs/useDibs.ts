@@ -90,7 +90,7 @@ export function useDibs() {
     return userTokens.map((tokenAddress) => [tokenAddress, account]);
   }, [account, userTokens]);
 
-  const claimedBalancesResult = useSingleContractMultipleData(dibsContract, 'accBalance', claimedBalancesCall);
+  const claimedBalancesResult = useSingleContractMultipleData(dibsContract, 'claimedBalance', claimedBalancesCall);
 
   const balances = useMemo((): AccBalanceObject[] => {
     const accBalancesResultLoaded = accBalancesResult.filter((r) => !!r.result);
