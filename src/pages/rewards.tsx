@@ -82,7 +82,7 @@ const Rewards = () => {
                 <p className={'text-22 mt-0.5'}>Earned Fees</p>
               </header>
               <main className={'flex justify-between'}>
-                <div className={'bg-cf bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
+                <div className={'bg-cf relative bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 block relative font-light'}>
                     Claimable fees{' '}
                     <button className={'btn-small btn-link absolute -right-2 -top-0.5'}>{`Claim separately ->`}</button>
@@ -90,7 +90,7 @@ const Rewards = () => {
                   {balancesToClaim.map((b) => (
                     <AccBalance key={b.tokenAddress} obj={b} />
                   ))}
-                  <footer className={'mt-20 pt-1 text-right'}>
+                  <footer className={' absolute right-8 bottom-7 pt-1 text-right'}>
                     {balancesToClaim.length ? (
                       <button className={'btn-medium btn-primary'} onClick={claimAll}>
                         Claim All
@@ -99,12 +99,12 @@ const Rewards = () => {
                   </footer>
                 </div>
 
-                <div className={'bg-tf bg-cover pl-8 pr-4 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
+                <div className={'bg-tf relative bg-cover pl-8 pr-4 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 inline-block font-light'}>Total fees claimed</label>
                   {claimedBalances.map((b) => (
                     <AccBalance key={b.tokenAddress} obj={b} />
                   ))}
-                  <footer className={'mt-20 pt-1 text-right'}>
+                  <footer className={'absolute right-4 bottom-6 pt-1 text-right'}>
                     <button className={'btn-medium text-lg btn-link'}>{`Claim History ->`}</button>
                   </footer>
                 </div>
