@@ -138,14 +138,14 @@ const YourCode = (props: ModalProps) => {
               value={name}
               onUserInput={setName}
               label={'Your Code'}
-              placeholder={'Enter Amount'}
+              placeholder={'Enter code'}
             />
             <Input
               value={parentCodeName}
               disabled={true}
               className={'flex-auto'}
               label={'Your Referral Code'}
-              placeholder={'Enter Amount'}
+              placeholder={'No referral code found'}
             />
             <button className={'btn-primary btn-large font-medium mt-4 px-12'} onClick={create}>
               {account ? (isSupportedChain(chainId) ? 'Create' : 'Switch Network') : 'Connect Wallet'}

@@ -32,6 +32,7 @@ module.exports = {
         chips: '#5EBAB0',
         gray: '#6F7787',
         body: '#F6F8FA',
+        disabled: '#E2E4E7',
         'dark-gray-2': '#535353',
         'soft-sky': '#BCC8DE',
         'soft-blue': '#EBF5FB',
@@ -66,7 +67,8 @@ module.exports = {
       boxShadow: {
         'primary-xl': '0px 8px 18px rgba(81, 88, 246, 0.15)',
         header: '0px 4px 12px rgba(0, 0, 0, 0.07)',
-        'lottery-inner-card': '0px 12px 18px rgba(0, 0, 0, 0.06)'
+        'lottery-inner-card': '0px 12px 18px rgba(0, 0, 0, 0.06)',
+        button: '0px 8px 12px rgba(0, 0, 0, 0.22)'
       },
       zIndex: {
         100: '100',
