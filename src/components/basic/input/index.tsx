@@ -9,10 +9,11 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   testid?: string;
   label?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 const Input = (props: InputProps) => {
-  const { className, currencyBalance, placeholder, label, onUserInput, value } = props;
+  const { className, currencyBalance, placeholder, label, onUserInput, value, disabled } = props;
 
   const maxAmountInput = maxAmountSpend(currencyBalance);
   const handleMax = useCallback(() => {
@@ -25,8 +26,8 @@ const Input = (props: InputProps) => {
     <div className={`${className ? className : ''} inline-flex flex-col`}>
       {label && <label className={'text-gray mb-0.5 pl-0.5'}>{label}</label>}
       <div
-        className={
-          'inline-flex bg-white border-soft-sky border-2 focus:border-pink-500 focus:ring-pink-500 rounded-xl px-4 h-14'
+        className= {
+          `inline-flex bg-white border-soft-sky rounded-xl px-4 h-14 ${(disabled) ? 'border-0 bg-disabled cursor-no-drop' : 'border-2 bg-white'}`
         }
       >
         <div className={'input-icon'}></div>
@@ -37,7 +38,7 @@ const Input = (props: InputProps) => {
           value={value}
           style={{ width: '100%' }}
           placeholder={placeholder}
-          className={'focus:outline-0'}
+          className={`focus:outline-0 ${(disabled) ? 'cursor-no-drop bg-disabled' : ''}`}
           onChange={(e) => (onUserInput ? onUserInput(e.target.value) : null)}
           data-testid={props.testid && `${props.testid}-input`}
         ></input>

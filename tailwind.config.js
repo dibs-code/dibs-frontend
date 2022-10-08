@@ -32,6 +32,7 @@ module.exports = {
         chips: '#5EBAB0',
         gray: '#6F7787',
         body: '#F6F8FA',
+        disabled: '#E2E4E7',
         'dark-gray-2': '#535353',
         'soft-sky': '#BCC8DE',
         'soft-blue': '#EBF5FB',
