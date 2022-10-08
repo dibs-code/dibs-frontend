@@ -2,6 +2,7 @@
 import { faCircleDollarToSlot, faGift, faTicket } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CurrencyAmount } from '@uniswap/sdk-core';
+import Modal from "components/modal";
 import Sidenav from 'components/navigation/sidenav';
 import useClaimAllCallback from 'hooks/dibs/useClaimAllCallback';
 import { BalanceObject, useDibs } from 'hooks/dibs/useDibs';
@@ -39,6 +40,17 @@ const Rewards = () => {
   // Mock variable for type of reward (nft / token)
   // const [isNFT, setIsNFT] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  function closeModal() {
+    setOpen(false);
+  }
+
+  const feeListDummy = [
+    {symbol: 'ETH', amount: 0.00175 },
+    {symbol: 'USDC', amount: 1.025 },
+    {symbol: 'UNI', amount: 0.0772 },
+  ]
+
   const [loading, setLoading] = useState(false);
   const mounted = useRef(false);
   useEffect(() => {
@@ -64,6 +76,20 @@ const Rewards = () => {
 
   return (
     <div className={'px-40 py-14'}>
+      <Modal title={'Claimable Fee List'} open={open} closeModal={closeModal}>
+        {feeListDummy.map(fee => {
+          return (
+            <li key={fee.symbol} className={'flex justify-between rounded-xl  items-center m-3 bg-primary-light px-4 py-3'}>
+            <div className={'flex items-center gap-4'}>
+              {/* shadow-[0px 4px 10px rgba(0, 0, 0, 0.08)] */}
+              <div className={'p-2 rounded-full shadow-xl bg-white'}><img className={'w-8 h-8'} src={`/${fee.symbol.toLowerCase()}-logo.svg`} /></div>
+              <p className={'text-xl font-semibold'}>{fee.amount+' '+fee.symbol}</p>
+            </div>
+            <div><button className={'btn-medium btn-primary'}>Claim</button></div>
+          </li>
+          )
+        })}
+      </Modal>
       <Sidenav></Sidenav>
       <main className={'pl-84'}>
         <>
@@ -85,7 +111,7 @@ const Rewards = () => {
                 <div className={'bg-cf relative bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 block relative font-light'}>
                     Claimable fees{' '}
-                    <button className={'btn-small btn-link absolute -right-2 -top-0.5'}>{`Claim separately ->`}</button>
+                    <button onClick={() => setOpen(true)} className={'btn-small btn-link absolute -right-2 -top-0.5'}>{`Claim separately ->`}</button>
                   </label>
                   {balancesToClaim.map((b) => (
                     <AccBalance key={b.tokenAddress} obj={b} />
