@@ -18,11 +18,14 @@ const AccBalance = (props: { obj: BalanceObject }) => {
   }, [props.obj.balance, token]);
   return (
     <h2>
-      {balance} {token?.symbol}{' '}
+      {balance} {token?.symbol}
     </h2>
   );
 };
 
+const NoBalance = () => {
+  return <h2>0 USDC</h2>;
+};
 const Rewards = () => {
   const { balancesToClaim, claimedBalances } = useDibs();
 
@@ -87,9 +90,11 @@ const Rewards = () => {
                     Claimable fees{' '}
                     <button className={'btn-small btn-link absolute -right-2 -top-0.5'}>{`Claim separately ->`}</button>
                   </label>
-                  {balancesToClaim.map((b) => (
-                    <AccBalance key={b.tokenAddress} obj={b} />
-                  ))}
+                  {balancesToClaim.length ? (
+                    balancesToClaim.map((b) => <AccBalance key={b.tokenAddress} obj={b} />)
+                  ) : (
+                    <NoBalance />
+                  )}
                   <footer className={'mt-20 pt-1 text-right'}>
                     {balancesToClaim.length ? (
                       <button className={'btn-medium btn-primary'} onClick={claimAll}>
@@ -101,9 +106,11 @@ const Rewards = () => {
 
                 <div className={'bg-tf bg-cover pl-8 pr-4 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 inline-block font-light'}>Total fees claimed</label>
-                  {claimedBalances.map((b) => (
-                    <AccBalance key={b.tokenAddress} obj={b} />
-                  ))}
+                  {claimedBalances.length ? (
+                    claimedBalances.map((b) => <AccBalance key={b.tokenAddress} obj={b} />)
+                  ) : (
+                    <NoBalance />
+                  )}
                   <footer className={'mt-20 pt-1 text-right'}>
                     <button className={'btn-medium text-lg btn-link'}>{`Claim History ->`}</button>
                   </footer>
