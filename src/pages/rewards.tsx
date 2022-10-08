@@ -73,7 +73,7 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
       <div className={'flex items-center gap-4'}>
         {/* shadow-[0px 4px 10px rgba(0, 0, 0, 0.08)] */}
         <div className={'p-2 rounded-full shadow-xl bg-white'}>
-          <img className={'w-8 h-8'} src={getLogoSrc(token?.symbol || 'eth')} />
+          <img className={'w-8 h-8'} src={getLogoSrc(token?.symbol || 'eth')} alt={'token'} />
         </div>
         <p className={'text-xl font-semibold'}>{balance + ' ' + token?.symbol}</p>
       </div>
@@ -104,12 +104,6 @@ const Rewards = () => {
   function closeModal() {
     setOpen(false);
   }
-
-  const feeListDummy = [
-    { symbol: 'ETH', amount: 0.00175 },
-    { symbol: 'USDC', amount: 1.025 },
-    { symbol: 'UNI', amount: 0.0772 },
-  ];
 
   return (
     <div className={'px-40 py-14'}>
