@@ -27,10 +27,66 @@ const AccBalance = (props: { obj: BalanceObject }) => {
 const NoBalance = () => {
   return <h2>0 USDC</h2>;
 };
+
+const ClaimRow = (props: { obj: BalanceObject }) => {
+  const token = useToken(props.obj.tokenAddress);
+  const balance = useMemo(() => {
+    if (!token) return '';
+    const amount = JSBI.BigInt(props.obj.balance.toString());
+    return CurrencyAmount.fromRawAmount(token, amount).toSignificant(5);
+  }, [props.obj.balance, token]);
+
+  const { callback: claimAllCallback } = useClaimAllCallback(props.obj);
+
+  const [loading, setLoading] = useState(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  const claim = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await claimAllCallback?.();
+    } catch (e) {
+      console.log('swap failed');
+      console.log(e);
+    }
+    if (mounted.current) {
+      setLoading(false);
+    }
+  }, [loading, claimAllCallback]);
+
+  function getLogoSrc(symbol: string | null | undefined) {
+    if (symbol && ['eth', 'uni', 'usdc'].includes(symbol.toLowerCase())) {
+      return `/${symbol.toLowerCase()}-logo.svg`;
+    }
+    return 'eth-logo.svg';
+  }
+
+  return (
+    <li className={'flex justify-between rounded-xl  items-center m-3 bg-primary-light px-4 py-3'}>
+      <div className={'flex items-center gap-4'}>
+        {/* shadow-[0px 4px 10px rgba(0, 0, 0, 0.08)] */}
+        <div className={'p-2 rounded-full shadow-xl bg-white'}>
+          <img className={'w-8 h-8'} src={getLogoSrc(token?.symbol || 'eth')} />
+        </div>
+        <p className={'text-xl font-semibold'}>{balance + ' ' + token?.symbol}</p>
+      </div>
+      <div>
+        <button className={'btn-medium btn-primary'} onClick={claim}>
+          Claim
+        </button>
+      </div>
+    </li>
+  );
+};
 const Rewards = () => {
   const { balancesToClaim, claimedBalances } = useDibs();
-
-  const { callback: claimAllCallback } = useClaimAllCallback();
 
   // Mock variable for Won lottery state
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,51 +111,16 @@ const Rewards = () => {
     { symbol: 'UNI', amount: 0.0772 },
   ];
 
-  const [loading, setLoading] = useState(false);
-  const mounted = useRef(false);
-  useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-    };
-  }, []);
-
-  const claimAll = useCallback(async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      await claimAllCallback?.();
-    } catch (e) {
-      console.log('swap failed');
-      console.log(e);
-    }
-    if (mounted.current) {
-      setLoading(false);
-    }
-  }, [loading, claimAllCallback]);
-
   return (
     <div className={'px-40 py-14'}>
       <Modal title={'Claimable Fee List'} open={open} closeModal={closeModal}>
-        {feeListDummy.map((fee) => {
-          return (
-            <li
-              key={fee.symbol}
-              className={'flex justify-between rounded-xl  items-center m-3 bg-primary-light px-4 py-3'}
-            >
-              <div className={'flex items-center gap-4'}>
-                {/* shadow-[0px 4px 10px rgba(0, 0, 0, 0.08)] */}
-                <div className={'p-2 rounded-full shadow-xl bg-white'}>
-                  <img className={'w-8 h-8'} src={`/${fee.symbol.toLowerCase()}-logo.svg`} />
-                </div>
-                <p className={'text-xl font-semibold'}>{fee.amount + ' ' + fee.symbol}</p>
-              </div>
-              <div>
-                <button className={'btn-medium btn-primary'}>Claim</button>
-              </div>
-            </li>
-          );
-        })}
+        {balancesToClaim.length ? (
+          balancesToClaim.map((b) => <ClaimRow key={b.tokenAddress} obj={b} />)
+        ) : (
+          <p className={'flex justify-between rounded-xl  items-center m-3 bg-primary-light px-4 py-3'}>
+            Nothing to claim
+          </p>
+        )}
       </Modal>
       <Sidenav></Sidenav>
       <main className={'pl-84'}>
@@ -121,11 +142,10 @@ const Rewards = () => {
               <main className={'flex justify-between'}>
                 <div className={'bg-cf relative bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 block relative font-light'}>
-                    Claimable fees{' '}
-                    <button
-                      onClick={() => setOpen(true)}
-                      className={'btn-small btn-link absolute -right-2 -top-0.5'}
-                    >{`Claim separately ->`}</button>
+                    Claimable fees {/*<button*/}
+                    {/*  onClick={() => setOpen(true)}*/}
+                    {/*  className={'btn-small btn-link absolute -right-2 -top-0.5'}*/}
+                    {/*>{`Claim separately ->`}</button>*/}
                   </label>
                   {balancesToClaim.length ? (
                     balancesToClaim.map((b) => <AccBalance key={b.tokenAddress} obj={b} />)
@@ -134,8 +154,8 @@ const Rewards = () => {
                   )}
                   <footer className={' absolute right-8 bottom-7 pt-1 text-right'}>
                     {balancesToClaim.length ? (
-                      <button className={'btn-medium btn-primary'} onClick={claimAll}>
-                        Claim All
+                      <button className={'btn-medium btn-primary'} onClick={() => setOpen(true)}>
+                        Claim
                       </button>
                     ) : null}
                   </footer>

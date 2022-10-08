@@ -1,9 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
-import { useDibs } from 'hooks/dibs/useDibs';
+import { BalanceObject } from 'hooks/dibs/useDibs';
 import { useDibsContract } from 'hooks/useContract';
 import React, { ReactNode, useMemo } from 'react';
-import { ClaimAllTransactionInfo, TransactionType } from 'state/transactions/types';
+import { ClaimFeeTransactionInfo, TransactionType } from 'state/transactions/types';
 
 import useDibsTransaction from './useDibsTransaction';
 
@@ -18,22 +18,27 @@ interface UseCallbackReturns {
   error?: ReactNode;
 }
 
-export default function useClaimAllCallback(): UseCallbackReturns {
-  const { balancesToClaim } = useDibs();
-
+export default function useClaimAllCallback(balanceToClaim: BalanceObject): UseCallbackReturns {
   const { account, chainId, provider } = useWeb3React();
   const dibsContract = useDibsContract();
   const calls = useMemo(() => {
     if (!dibsContract || !account) return [];
-    return balancesToClaim.map((b) => ({
-      address: dibsContract.address,
-      calldata: dibsContract.interface.encodeFunctionData('claim', [b.tokenAddress, b.balance, account]) ?? '',
-      value: '0x0',
-    }));
-  }, [account, balancesToClaim, dibsContract]);
+    return [
+      {
+        address: dibsContract.address,
+        calldata:
+          dibsContract.interface.encodeFunctionData('claim', [
+            balanceToClaim.tokenAddress,
+            balanceToClaim.balance,
+            account,
+          ]) ?? '',
+        value: '0x0',
+      },
+    ];
+  }, [account, balanceToClaim, dibsContract]);
 
-  const info: ClaimAllTransactionInfo = {
-    type: TransactionType.CLAIM_ALL,
+  const info: ClaimFeeTransactionInfo = {
+    type: TransactionType.CLAIM_FEE,
   };
 
   const { callback } = useDibsTransaction(account, chainId, provider, calls, info);

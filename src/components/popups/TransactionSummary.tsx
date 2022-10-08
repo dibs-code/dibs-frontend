@@ -4,7 +4,7 @@ import React from 'react';
 
 import {
   ApproveTransactionInfo,
-  ClaimAllTransactionInfo,
+  ClaimFeeTransactionInfo,
   RegisterTransactionInfo,
   RewardTransactionInfo,
   TransactionInfo,
@@ -58,7 +58,7 @@ function RewardSummary({ info }: { info: RewardTransactionInfo }) {
   );
 }
 
-function ClaimAllSummary({ info }: { info: ClaimAllTransactionInfo }) {
+function ClaimFeeSummary({ info }: { info: ClaimFeeTransactionInfo }) {
   return <span>Claimed successfully</span>;
 }
 
@@ -73,7 +73,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
     case TransactionType.REWARD:
       return <RewardSummary info={info} />;
 
-    case TransactionType.CLAIM_ALL:
-      return <ClaimAllSummary info={info} />;
+    case TransactionType.CLAIM_FEE:
+      return <ClaimFeeSummary info={info} />;
   }
 }

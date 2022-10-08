@@ -17,7 +17,7 @@ export enum TransactionType {
   APPROVAL,
   REGISTER,
   REWARD,
-  CLAIM_ALL,
+  CLAIM_FEE,
 }
 
 export interface BaseTransactionInfo {
@@ -41,15 +41,15 @@ export interface RewardTransactionInfo extends BaseTransactionInfo {
   parentName: string;
 }
 
-export interface ClaimAllTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.CLAIM_ALL;
+export interface ClaimFeeTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.CLAIM_FEE;
 }
 
 export type TransactionInfo =
   | ApproveTransactionInfo
   | RegisterTransactionInfo
   | RewardTransactionInfo
-  | ClaimAllTransactionInfo;
+  | ClaimFeeTransactionInfo;
 
 export interface TransactionDetails {
   hash: string;
