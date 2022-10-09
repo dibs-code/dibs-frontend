@@ -1,7 +1,7 @@
 import { faCircleC, faFileChartColumn, faGift, faRightLeft } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
-import WalletModal from 'components/modal/wallet';
+import WalletModal from 'components/WalletModal';
 import { isSupportedChain } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import useWalletActivation from 'hooks/useWalletActivation';
@@ -43,7 +43,7 @@ const Sidenav = () => {
     ],
     [],
   );
-  const { tryActivation, disconnectWallet } = useWalletActivation();
+  const { disconnectWallet } = useWalletActivation();
 
   const renderConnector = () => {
     return account ? (
@@ -61,9 +61,9 @@ const Sidenav = () => {
       </>
     ) : (
       <>
-        <WalletModal closeModal={closeModal} open={open} hide={() => setOpen(!open)} />
+        <WalletModal closeModal={closeModal} open={open} />
         <div className={'flex justify-center'}>
-          <button className={'btn-primary-inverted btn-medium text-center'} onClick={tryActivation}>
+          <button className={'btn-primary-inverted btn-medium text-center'} onClick={() => setOpen(true)}>
             Connect Wallet
           </button>
         </div>

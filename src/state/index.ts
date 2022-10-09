@@ -5,10 +5,12 @@ import { load, save } from 'redux-localstorage-simple';
 import { isTestEnv } from 'utils/env';
 
 import application from './application/reducer';
+import connection from './connection/reducer';
 import { updateVersion } from './global/actions';
 import lists from './lists/reducer';
 import transactions from './transactions/reducer';
 import user from './user/reducer';
+import wallets from './wallets/reducer';
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists'];
 
@@ -16,7 +18,9 @@ const store = configureStore({
   reducer: {
     application,
     user,
+    connection,
     transactions,
+    wallets,
     multicall: multicall.reducer,
     lists,
   },

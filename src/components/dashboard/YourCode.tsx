@@ -3,11 +3,11 @@ import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
+import WalletModal from 'components/WalletModal';
 import { isSupportedChain, SupportedChainId } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import { useRegisterCallback } from 'hooks/dibs/useRegisterCallback';
 import useSelectChain from 'hooks/useSelectChain';
-import useWalletActivation from 'hooks/useWalletActivation';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { copyToClipboard } from 'utils/index';
 
@@ -25,7 +25,6 @@ const YourCode = (props: ModalProps) => {
   const { chainId, account } = useWeb3React();
   const { addressToName, parentCodeName } = useDibs();
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
-  const { tryActivation } = useWalletActivation();
 
   const mounted = useRef(false);
 
@@ -41,7 +40,7 @@ const YourCode = (props: ModalProps) => {
   const selectChain = useSelectChain();
   const create = useCallback(async () => {
     if (!account) {
-      await tryActivation();
+      setOpen(true);
       return;
     }
     if (!isSupportedChain(chainId)) {
@@ -59,7 +58,7 @@ const YourCode = (props: ModalProps) => {
     if (mounted.current) {
       setLoading(false);
     }
-  }, [account, chainId, loading, registerCallback, selectChain, tryActivation]);
+  }, [account, chainId, loading, registerCallback, selectChain]);
 
   //
   // const [links, setLinks] = useState([]);
@@ -72,8 +71,15 @@ const YourCode = (props: ModalProps) => {
     alert('Copied to clipboard');
   }, [refUrl]);
 
+  const [open, setOpen] = React.useState(false);
+
+  function closeModal() {
+    setOpen(false);
+  }
+
   return (
     <>
+      <WalletModal closeModal={closeModal} open={open} />
       <header className={'border-b pb-4 mb-16'}>
         <h2>Your Code</h2>
       </header>
