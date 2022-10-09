@@ -186,7 +186,7 @@ const Rewards = () => {
                       <h4 className={'mb-6'}>You have 32 tickets for this week&apos;s lottery</h4>
                       <div>
                         <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>
-                        <p className={'text-lg'}>Unfortunately, You didn&apos;t win the prize</p>
+                        <p className={'text-lg'}>{wonLottery ? 'Congrats! You won the prize' : `Unfortunately, You didn't win the prize`}</p>
                       </div>
                     </div>
                     <div>
@@ -212,7 +212,7 @@ const Rewards = () => {
 
                     <div className={'pt-6'}>
                       <div className={'px-4 py-4 bg-white rounded-xl shadow-lottery-inner-card'}>
-                        {wonLottery ? (
+                        {!wonLottery ? (
                           <div className={'flex flex-col py-0.5 gap-3 items-center'}>
                             <img src={'/sad-robo.png'} className={'w-22 '} alt="lottery lost" />
                             <p className={'font-normal text-gray px-0.5'}>There is nothing to claim</p>

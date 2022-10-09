@@ -9,6 +9,7 @@ import React, { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'state/hooks';
 
+import Report from "./pages/reports";
 import RoutePath from './routes';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
     <Routes>
       <Route path={RoutePath.HOME} element={<Home />} />
       <Route path={RoutePath.REWARDS} element={<Rewards />} />
-      <Route path={RoutePath.REPORTS} element={<Home />} />
+      <Route path={RoutePath.REPORTS} element={<Report />} />
       <Route path={RoutePath.TEST_SWAP} element={<TestSwap />} />
     </Routes>
   );

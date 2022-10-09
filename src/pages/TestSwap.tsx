@@ -107,21 +107,26 @@ const TestSwap = () => {
     <div className={'px-40 py-14'}>
       <Sidenav></Sidenav>
       <main className={'pl-84'}>
-        <section className={'mt-8 gap-4 display-flex flex flex-wrap'}>
+        <header className={'border-b pb-4 mb-16'}>
+          <h2>Test Swap</h2>
+        </header>
+        <section className={'mt-8 gap-4 flex'}>
           <Input
-            className={'flex-auto'}
+            className={'w-7/12'}
             value={user}
             onUserInput={setUser}
             label={'User Address'}
             placeholder={'Enter Address'}
           />
           <Input
-            className={'flex-auto'}
+            className={'w-5/12'}
             value={parentName}
             onUserInput={setParentName}
             label={'Parent Code'}
             placeholder={'Enter Code'}
           />
+        </section>
+        <section className={'mt-2 gap-4 flex'}>
           <Input
             type={'number'}
             className={'flex-auto'}
@@ -145,8 +150,9 @@ const TestSwap = () => {
             label={'Token Address'}
             placeholder={'Enter Address'}
           />
-          {renderButton()}
+
         </section>
+        {renderButton()}
       </main>
     </div>
   );
