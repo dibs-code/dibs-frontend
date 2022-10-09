@@ -1,4 +1,5 @@
 import { Connector } from '@web3-react/types';
+import WALLET_CONNECT_ICON_URL from 'assets/images/wallet-connect.svg';
 import { ConnectionType, walletConnectConnection } from 'connection';
 import { getConnectionName } from 'connection/utils';
 
@@ -7,6 +8,7 @@ import Option from './Option';
 const BASE_PROPS = {
   color: '#4196FC',
   id: 'wallet-connect',
+  icon: WALLET_CONNECT_ICON_URL,
 };
 
 export function WalletConnectOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {

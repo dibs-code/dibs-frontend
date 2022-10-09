@@ -1,4 +1,5 @@
 import { Connector } from '@web3-react/types';
+import COINBASE_ICON_URL from 'assets/images/coinbase-wallet.svg';
 import { coinbaseWalletConnection, ConnectionType } from 'connection';
 import { getConnectionName } from 'connection/utils';
 
@@ -6,6 +7,7 @@ import Option from './Option';
 
 const BASE_PROPS = {
   color: '#315CF5',
+  icon: COINBASE_ICON_URL,
   id: 'coinbase-wallet',
 };
 

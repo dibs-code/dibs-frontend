@@ -8,6 +8,7 @@ export default function Option({
   color,
   header,
   subheader,
+  icon,
   isActive = false,
   id,
 }: {
@@ -18,6 +19,7 @@ export default function Option({
   color: string;
   header: React.ReactNode;
   subheader?: React.ReactNode;
+  icon: string;
   isActive?: boolean;
   id: string;
 }) {
@@ -33,7 +35,7 @@ export default function Option({
         <p>{header}</p>
         <div className={'bg-white rounded-full p-2 shadow-xl flex justify-center items-center'}>
           {' '}
-          <img alt={'wallet'} className={'h-6 w-6'} src={`/${id}.svg`} />
+          <img alt={'wallet'} className={'h-6 w-6'} src={icon} />
         </div>
       </div>
     </div>
