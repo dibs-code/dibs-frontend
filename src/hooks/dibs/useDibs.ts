@@ -128,3 +128,48 @@ export function useDibs() {
 
   return { addressToName, parentCodeName, userTokensResult, balances, balancesToClaim, claimedBalances };
 }
+
+export function useDibsLottery() {
+  const dibsContract = useDibsContract();
+
+  const activeLotteryRoundCall = useMemo(() => {
+    return [dibsInterface.encodeFunctionData('getActiveLotteryRound', [])];
+  }, []);
+
+  const [activeLotteryRoundResult] = useSingleContractWithCallData(dibsContract, activeLotteryRoundCall);
+
+  const activeLotteryRound: ContractFunctionReturnType<Dibs['callStatic']['getActiveLotteryRound']> =
+    activeLotteryRoundResult?.result?.[0];
+
+  const firstRoundStartTimeCall = useMemo(() => {
+    return [dibsInterface.encodeFunctionData('firstRoundStartTime', [])];
+  }, []);
+
+  const [firstRoundStartTimeResult] = useSingleContractWithCallData(dibsContract, firstRoundStartTimeCall);
+
+  const firstRoundStartTime: ContractFunctionReturnType<Dibs['callStatic']['firstRoundStartTime']> =
+    firstRoundStartTimeResult?.result?.[0];
+
+  const roundDurationCall = useMemo(() => {
+    return [dibsInterface.encodeFunctionData('roundDuration', [])];
+  }, []);
+
+  const [roundDurationResult] = useSingleContractWithCallData(dibsContract, roundDurationCall);
+
+  const roundDuration: ContractFunctionReturnType<Dibs['callStatic']['roundDuration']> =
+    roundDurationResult?.result?.[0];
+
+  const { account } = useWeb3React();
+
+  const userLotteryTicketsCall = useMemo(() => {
+    if (!account || !activeLotteryRound) return [];
+    return [dibsInterface.encodeFunctionData('userLotteryTickets', [activeLotteryRound, account])];
+  }, [account, activeLotteryRound]);
+
+  const [userLotteryTicketsResult] = useSingleContractWithCallData(dibsContract, userLotteryTicketsCall);
+
+  const userLotteryTickets: ContractFunctionReturnType<Dibs['callStatic']['userLotteryTickets']> =
+    userLotteryTicketsResult?.result?.[0] || BigNumber.from(0);
+
+  return { activeLotteryRound, firstRoundStartTime, roundDuration, userLotteryTickets };
+}

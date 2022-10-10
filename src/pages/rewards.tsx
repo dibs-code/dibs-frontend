@@ -5,7 +5,7 @@ import { CurrencyAmount } from '@uniswap/sdk-core';
 import Modal from 'components/modal';
 import Sidenav from 'components/navigation/sidenav';
 import useClaimAllCallback from 'hooks/dibs/useClaimAllCallback';
-import { BalanceObject, useDibs } from 'hooks/dibs/useDibs';
+import { BalanceObject, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
 import { useToken } from 'hooks/Tokens';
 import JSBI from 'jsbi';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -105,6 +105,38 @@ const Rewards = () => {
     setOpen(false);
   }
 
+  const { activeLotteryRound, firstRoundStartTime, roundDuration, userLotteryTickets } = useDibsLottery();
+
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const [days, setDays] = useState('00');
+  const [hours, setHours] = useState('00');
+  const [minutes, setMinutes] = useState('00');
+  const [seconds, setSeconds] = useState('00');
+
+  useEffect(() => {
+    const diffTime =
+      firstRoundStartTime && activeLotteryRound && roundDuration
+        ? firstRoundStartTime + (activeLotteryRound + 1) * roundDuration - Math.floor(now.getTime() / 1000)
+        : 0;
+    const diff = {
+      seconds: String(diffTime % 60).padStart(2, '0'),
+      minutes: String(Math.floor(diffTime / 60) % 60).padStart(2, '0'),
+      hours: String(Math.floor(diffTime / 3600) % 24).padStart(2, '0'),
+      days: String(Math.floor(diffTime / 86400)).padStart(2, '0'),
+    };
+    setSeconds(diff.seconds);
+    setMinutes(diff.minutes);
+    setHours(diff.hours);
+    setDays(diff.days);
+  }, [now, activeLotteryRound, firstRoundStartTime, roundDuration]);
+
   return (
     <div className={'px-40 py-14'}>
       <Modal title={'Claimable Fee List'} open={open} closeModal={closeModal}>
@@ -183,16 +215,23 @@ const Rewards = () => {
                 <div className={'lottery-card  px-12 py-8'}>
                   <section className={'flex justify-between '}>
                     <div className={''}>
-                      <h4 className={'mb-6'}>You have 32 tickets for this week&apos;s lottery</h4>
+                      <h4 className={'mb-6'}>
+                        You have {userLotteryTickets.toNumber()} tickets for this week&apos;s lottery
+                      </h4>
                       <div>
                         <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>
-                        <p className={'text-lg'}>{wonLottery ? 'Congrats! You won the prize' : `Unfortunately, You didn't win the prize`}</p>
+                        <p className={'text-lg'}>
+                          {wonLottery ? 'Congrats! You won the prize' : `Unfortunately, You didn't win the prize`}
+                        </p>
                       </div>
                     </div>
                     <div>
-                      <div className={'px-4 py-4 bg-white rounded-xl shadow-lottery-inner-card'}>
+                      <div
+                        className={'px-4 py-4 bg-white rounded-xl shadow-lottery-inner-card'}
+                        style={{ width: 233.83 }}
+                      >
                         <p className={'mb-2'}>Next draw in</p>
-                        <p className={'font-normal text-4xl'}>03:23:17:34</p>
+                        <p className={'font-normal text-4xl'}>{`${days}:${hours}:${minutes}:${seconds}`}</p>
                       </div>
                     </div>
                   </section>
