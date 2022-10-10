@@ -5,7 +5,7 @@ import { CurrencyAmount } from '@uniswap/sdk-core';
 import Modal from 'components/modal';
 import Sidenav from 'components/navigation/sidenav';
 import useClaimAllCallback from 'hooks/dibs/useClaimAllCallback';
-import { BalanceObject, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
+import { BalanceObject, LotteryStatus, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
 import { useToken } from 'hooks/Tokens';
 import JSBI from 'jsbi';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -87,14 +87,11 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
 };
 const Rewards = () => {
   const { balancesToClaim, claimedBalances } = useDibs();
+  const { userLotteryStatus } = useDibsLottery();
 
-  // Mock variable for Won lottery state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [wonLottery, setWonLottery] = useState(false);
+  const wonLottery = useMemo(() => userLotteryStatus === LotteryStatus.WON, [userLotteryStatus]);
 
-  // Mock variable for Having past rewards that you didn't claimed
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [prePrize, setPrePrize] = useState(false);
+  const prePrize = false;
 
   // Mock variable for type of reward (nft / token)
   // const [isNFT, setIsNFT] = useState(false);
@@ -218,12 +215,14 @@ const Rewards = () => {
                       <h4 className={'mb-6'}>
                         You have {userLotteryTickets.toNumber()} tickets for this week&apos;s lottery
                       </h4>
-                      <div>
-                        <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>
-                        <p className={'text-lg'}>
-                          {wonLottery ? 'Congrats! You won the prize' : `Unfortunately, You didn't win the prize`}
-                        </p>
-                      </div>
+                      {userLotteryStatus !== LotteryStatus.UNKNOWN && (
+                        <div>
+                          <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>
+                          <p className={'text-lg'}>
+                            {wonLottery ? 'Congrats! You won the prize' : `Unfortunately, You didn't win the prize`}
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div>
                       <div

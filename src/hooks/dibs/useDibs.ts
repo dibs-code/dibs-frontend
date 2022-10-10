@@ -11,6 +11,12 @@ import { Dibs } from '../../abis/types';
 
 const dibsInterface = new Interface(DIBS_ABI);
 
+export enum LotteryStatus {
+  UNKNOWN,
+  WON,
+  LOST,
+}
+
 export type ContractFunctionReturnType<T> = T extends (...args: any) => Promise<infer R>
   ? // TODO: handle struct return type
     R extends [...params: any[]]
@@ -171,5 +177,20 @@ export function useDibsLottery() {
   const userLotteryTickets: ContractFunctionReturnType<Dibs['callStatic']['userLotteryTickets']> =
     userLotteryTicketsResult?.result?.[0] || BigNumber.from(0);
 
-  return { activeLotteryRound, firstRoundStartTime, roundDuration, userLotteryTickets };
+  const lotteryWinnerCall = useMemo(() => {
+    if (!activeLotteryRound) return [];
+    return [dibsInterface.encodeFunctionData('lotteryWinners', [activeLotteryRound - 1])];
+  }, [activeLotteryRound]);
+
+  const [lotteryWinnerResult] = useSingleContractWithCallData(dibsContract, lotteryWinnerCall);
+
+  const userLotteryStatus = useMemo(() => {
+    if (!account || !lotteryWinnerResult?.result) return LotteryStatus.UNKNOWN;
+    const lotteryWinner: ContractFunctionReturnType<Dibs['callStatic']['lotteryWinners']> =
+      lotteryWinnerResult?.result?.[0];
+    if (lotteryWinner === account) return LotteryStatus.WON;
+    return LotteryStatus.LOST;
+  }, [account, lotteryWinnerResult?.result]);
+
+  return { activeLotteryRound, firstRoundStartTime, roundDuration, userLotteryTickets, userLotteryStatus };
 }
