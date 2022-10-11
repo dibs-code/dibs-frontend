@@ -78,8 +78,8 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
         <p className={'text-xl font-semibold'}>{balance + ' ' + token?.symbol}</p>
       </div>
       <div>
-        <button className={'btn-medium btn-primary'} onClick={claim}>
-          Claim
+        <button className={`btn-medium btn-primary ${loading ? 'btn-waiting' : ''}`} onClick={claim}>
+          {loading ? 'Waiting to Confirm' : 'Claim'}
         </button>
       </div>
     </li>
@@ -136,7 +136,7 @@ const Rewards = () => {
 
   return (
     <div className={'px-40 py-14'}>
-      <Modal title={'Claimable Fee List'} open={open} closeModal={closeModal}>
+      <Modal className={'!max-w-lg'} title={'Claimable Fee List'} open={open} closeModal={closeModal}>
         {balancesToClaim.length ? (
           balancesToClaim.map((b) => <ClaimRow key={b.tokenAddress} obj={b} />)
         ) : (

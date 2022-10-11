@@ -3,6 +3,7 @@ import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
+import Modal from "components/modal";
 import WalletModal from 'components/WalletModal';
 import { isSupportedChain, SupportedChainId } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
@@ -35,6 +36,7 @@ const YourCode = (props: ModalProps) => {
     };
   }, []);
   const [loading, setLoading] = useState(false);
+  const [submitModal, setSubmitModal] = useState(false);
   const [name, setName] = useState('');
   const { callback: registerCallback } = useRegisterCallback(name);
   const selectChain = useSelectChain();
@@ -50,9 +52,11 @@ const YourCode = (props: ModalProps) => {
     if (loading) return;
     setLoading(true);
     try {
+      // todo #alimahdiar we need to have a modal for when users submit the transition (click on confirm on their wallet)
+      // setSubmitModal(true)
       await registerCallback?.();
     } catch (e) {
-      console.log('vote failed');
+      console.log('register failed');
       console.log(e);
     }
     if (mounted.current) {
@@ -79,6 +83,11 @@ const YourCode = (props: ModalProps) => {
 
   return (
     <>
+      <Modal open={submitModal} closeModal={() => {setSubmitModal(false)}}>
+        <main>
+          Transition Submitted
+        </main>
+      </Modal>
       <WalletModal closeModal={closeModal} open={open} />
       <header className={'border-b pb-4 mb-16'}>
         <h2>Your Code</h2>
@@ -153,8 +162,8 @@ const YourCode = (props: ModalProps) => {
               label={'Your Referral Code'}
               placeholder={'No referral code found'}
             />
-            <button className={'btn-primary btn-large font-medium mt-4 px-12'} onClick={create}>
-              {account ? (isSupportedChain(chainId) ? 'Create' : 'Switch Network') : 'Connect Wallet'}
+            <button className={`btn-primary btn-large font-medium mt-4 px-12 ${loading ? 'btn-waiting' : ''}`} onClick={create}>
+              {account ? (isSupportedChain(chainId) ? (loading ? 'Waiting to Confirm' : 'Create') : 'Switch Network') : 'Connect Wallet'}
             </button>
           </section>
         </main>

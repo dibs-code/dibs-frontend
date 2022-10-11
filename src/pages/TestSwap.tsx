@@ -88,16 +88,16 @@ const TestSwap = () => {
       );
     }
     if (approvalToken === ApprovalState.PENDING) {
-      return <button className={'btn-primary btn-large font-medium mt-6 px-12'}>Waiting for Approve...</button>;
+      return <button className={'btn-primary btn-large font-medium mt-6 px-12 btn-waiting'}>Waiting for Approve...</button>;
     }
     if (approvalToken === ApprovalState.UNKNOWN) {
       return <button className={'btn-primary btn-large font-medium mt-6 px-12'}>Loading Approval State...</button>;
     }
     if (loading) {
-      return <button className={'btn-primary btn-large font-medium mt-6 px-12'}>Sending Transaction...</button>;
+      return <button className={'btn-primary btn-large font-medium mt-6 px-12 btn-waiting'}>Waiting to Confirm</button>;
     }
     return (
-      <button className={'btn-primary btn-large font-medium mt-6 px-12'} onClick={swap}>
+      <button className={`btn-primary btn-large font-medium mt-6 px-12`} onClick={swap}>
         Swap {token ? token.symbol : 'Unknown'}
       </button>
     );
