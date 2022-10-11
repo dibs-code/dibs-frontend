@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
+import SubmittedModal from "components/modal/submitted";
 import Sidenav from 'components/navigation/sidenav';
 import { DIBS_ADDRESS } from 'constants/addresses';
 import { useTestSwapCallback } from 'hooks/dibs/useTestSwapCallback';
@@ -21,6 +22,7 @@ const TestSwap = () => {
   const [parentName, setParentName] = useState('');
 
   const [totalFees, setTotalFees] = useState('0.01');
+  const [submitModal, setSubmitModal] = useState(false);
   const [totalVolume, setTotalVolume] = useState(10);
   const [tokenAddress, setTokenAddress] = useState('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984');
   const token = useToken(tokenAddress);
@@ -64,6 +66,7 @@ const TestSwap = () => {
     setLoading(true);
     try {
       await testSwapCallback?.();
+      setSubmitModal(true)
     } catch (e) {
       console.log('swap failed');
       console.log(e);
@@ -105,6 +108,7 @@ const TestSwap = () => {
 
   return (
     <div className={'px-40 py-14'}>
+      <SubmittedModal open={submitModal} closeModal={()=> {setSubmitModal(false)}}></SubmittedModal>
       <Sidenav></Sidenav>
       <main className={'pl-84'}>
         <header className={'border-b pb-4 mb-16'}>

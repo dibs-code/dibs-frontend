@@ -3,6 +3,7 @@ import { faCircleDollarToSlot, faGift, faTicket } from '@fortawesome/pro-solid-s
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CurrencyAmount } from '@uniswap/sdk-core';
 import Modal from 'components/modal';
+import SubmittedModal from "components/modal/submitted";
 import Sidenav from 'components/navigation/sidenav';
 import useClaimAllCallback from 'hooks/dibs/useClaimAllCallback';
 import { BalanceObject, LotteryStatus, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
@@ -37,7 +38,7 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
   }, [props.obj.balance, token]);
 
   const { callback: claimAllCallback } = useClaimAllCallback(props.obj);
-
+  const [submitModal, setSubmitModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const mounted = useRef(false);
   useEffect(() => {
@@ -52,6 +53,7 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
     setLoading(true);
     try {
       await claimAllCallback?.();
+      setSubmitModal(true)
     } catch (e) {
       console.log('swap failed');
       console.log(e);
@@ -69,6 +71,8 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
   }
 
   return (
+    <>
+      <SubmittedModal open={submitModal} closeModal={()=> {setSubmitModal(false)}}></SubmittedModal>
     <li className={'flex justify-between rounded-xl  items-center m-3 bg-primary-light px-4 py-3'}>
       <div className={'flex items-center gap-4'}>
         {/* shadow-[0px 4px 10px rgba(0, 0, 0, 0.08)] */}
@@ -83,6 +87,7 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
         </button>
       </div>
     </li>
+      </>
   );
 };
 const Rewards = () => {

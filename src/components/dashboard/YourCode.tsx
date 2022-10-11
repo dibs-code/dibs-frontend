@@ -1,9 +1,9 @@
-import { faCopy } from '@fortawesome/pro-regular-svg-icons';
+import {faCopy } from '@fortawesome/pro-regular-svg-icons';
 import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
-import Modal from "components/modal";
+import SubmittedModal from "components/modal/submitted";
 import WalletModal from 'components/WalletModal';
 import { isSupportedChain, SupportedChainId } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
@@ -52,9 +52,8 @@ const YourCode = (props: ModalProps) => {
     if (loading) return;
     setLoading(true);
     try {
-      // todo #alimahdiar we need to have a modal for when users submit the transition (click on confirm on their wallet)
-      // setSubmitModal(true)
       await registerCallback?.();
+      setSubmitModal(true)
     } catch (e) {
       console.log('register failed');
       console.log(e);
@@ -83,11 +82,7 @@ const YourCode = (props: ModalProps) => {
 
   return (
     <>
-      <Modal open={submitModal} closeModal={() => {setSubmitModal(false)}}>
-        <main>
-          Transition Submitted
-        </main>
-      </Modal>
+      <SubmittedModal open={submitModal} closeModal={()=> {setSubmitModal(false)}}></SubmittedModal>
       <WalletModal closeModal={closeModal} open={open} />
       <header className={'border-b pb-4 mb-16'}>
         <h2>Your Code</h2>
