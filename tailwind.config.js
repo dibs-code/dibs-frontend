@@ -63,6 +63,8 @@ module.exports = {
         blur: "url('/img/blur-bg.svg')",
         tf: "url('../public/tf-bg.svg')",
         cf: "url('../public/cf-bg.svg')",
+        g2: "linear-gradient(92.79deg, rgba(246, 150, 81, 0.177) -1.84%, rgba(246, 81, 121, 0.183) 108.07%)",
+        g3: "linear-gradient(92.79deg, rgba(81, 88, 246, 0.177) -1.84%, rgba(154, 81, 246, 0.183) 108.07%)",
       },
       boxShadow: {
         'primary-xl': '0px 8px 18px rgba(81, 88, 246, 0.15)',
