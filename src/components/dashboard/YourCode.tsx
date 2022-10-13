@@ -37,7 +37,7 @@ const YourCode = (props: ModalProps) => {
     };
   }, []);
   const [loading, setLoading] = useState(false);
-  const [submitModal, setSubmitModal] = useState(false);
+  const [submittedTxHash, setSubmittedTxHash] = useState<string | null>(null);
   const [name, setName] = useState('');
   const { callback: registerCallback } = useRegisterCallback(name);
   const selectChain = useSelectChain();
@@ -53,8 +53,10 @@ const YourCode = (props: ModalProps) => {
     if (loading) return;
     setLoading(true);
     try {
-      await registerCallback?.();
-      setSubmitModal(true);
+      const tx = await registerCallback?.();
+      if (tx) {
+        setSubmittedTxHash(tx.hash);
+      }
     } catch (e) {
       console.log('register failed');
       console.log(e);
@@ -85,9 +87,9 @@ const YourCode = (props: ModalProps) => {
   return (
     <>
       <SubmittedModal
-        open={submitModal}
+        hash={submittedTxHash}
         closeModal={() => {
-          setSubmitModal(false);
+          setSubmittedTxHash(null);
         }}
       ></SubmittedModal>
       <WalletModal closeModal={closeModal} open={open} />
