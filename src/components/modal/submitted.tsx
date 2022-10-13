@@ -1,10 +1,9 @@
+// @flow
 import { faArrowUpFromLine } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from 'components/modal/index';
 import React, { PropsWithChildren } from 'react';
-//
 
-// @flow
 export interface ModalPropsInterface extends React.HTMLAttributes<HTMLElement> {
   open: boolean;
 

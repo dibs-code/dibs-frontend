@@ -79,7 +79,7 @@ export default function WalletModal(props: ModalPropsInterface) {
         dispatch(updateConnectionError({ connectionType, error: error.message }));
       }
     },
-    [dispatch],
+    [dispatch, props],
   );
 
   function getOptions() {

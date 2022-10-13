@@ -1,15 +1,16 @@
-import {faCopy } from '@fortawesome/pro-regular-svg-icons';
+import { faCopy } from '@fortawesome/pro-regular-svg-icons';
 import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
-import SubmittedModal from "components/modal/submitted";
+import SubmittedModal from 'components/modal/submitted';
 import WalletModal from 'components/WalletModal';
 import { isSupportedChain, SupportedChainId } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import { useRegisterCallback } from 'hooks/dibs/useRegisterCallback';
 import useSelectChain from 'hooks/useSelectChain';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useAddPopup } from 'state/application/hooks';
 import { copyToClipboard } from 'utils/index';
 
 // import { Dialog, Transition } from '@headlessui/react';
@@ -53,7 +54,7 @@ const YourCode = (props: ModalProps) => {
     setLoading(true);
     try {
       await registerCallback?.();
-      setSubmitModal(true)
+      setSubmitModal(true);
     } catch (e) {
       console.log('register failed');
       console.log(e);
@@ -68,11 +69,12 @@ const YourCode = (props: ModalProps) => {
 
   // const { open, closeModal, children, className, title } = props;
   const refUrl = useMemo(() => `${window.location.host}/?ref=${addressToName}`, [addressToName]);
+  const addPopup = useAddPopup();
 
   const copyRefUrl = useCallback(async () => {
     await copyToClipboard(refUrl);
-    alert('Copied to clipboard');
-  }, [refUrl]);
+    addPopup({ clipboard: true }, undefined, 3000);
+  }, [addPopup, refUrl]);
 
   const [open, setOpen] = React.useState(false);
 
@@ -82,7 +84,12 @@ const YourCode = (props: ModalProps) => {
 
   return (
     <>
-      <SubmittedModal open={submitModal} closeModal={()=> {setSubmitModal(false)}}></SubmittedModal>
+      <SubmittedModal
+        open={submitModal}
+        closeModal={() => {
+          setSubmitModal(false);
+        }}
+      ></SubmittedModal>
       <WalletModal closeModal={closeModal} open={open} />
       <header className={'border-b pb-4 mb-16'}>
         <h2>Your Code</h2>
@@ -157,8 +164,17 @@ const YourCode = (props: ModalProps) => {
               label={'Your Referral Code'}
               placeholder={'No referral code found'}
             />
-            <button className={`btn-primary btn-large font-medium mt-4 px-12 ${loading ? 'btn-waiting' : ''}`} onClick={create}>
-              {account ? (isSupportedChain(chainId) ? (loading ? 'Waiting to Confirm' : 'Create') : 'Switch Network') : 'Connect Wallet'}
+            <button
+              className={`btn-primary btn-large font-medium mt-4 px-12 ${loading ? 'btn-waiting' : ''}`}
+              onClick={create}
+            >
+              {account
+                ? isSupportedChain(chainId)
+                  ? loading
+                    ? 'Waiting to Confirm'
+                    : 'Create'
+                  : 'Switch Network'
+                : 'Connect Wallet'}
             </button>
           </section>
         </main>

@@ -1,17 +1,20 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
-import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc';
 
-import { SupportedChainId } from '../../constants/chains'
+import { SupportedChainId } from '../../constants/chains';
 
 export type PopupContent =
   | {
       txn: {
-        hash: string
-      }
+        hash: string;
+      };
     }
   | {
-      failedSwitchNetwork: SupportedChainId
+      failedSwitchNetwork: SupportedChainId;
     }
+  | {
+      clipboard: boolean;
+    };
 
 export enum ApplicationModal {
   ADDRESS_CLAIM,
@@ -35,30 +38,30 @@ export enum ApplicationModal {
   FEATURE_FLAGS,
 }
 
-type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
+type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>;
 
 export interface ApplicationState {
-  readonly chainId: number | null
-  readonly openModal: ApplicationModal | null
-  readonly popupList: PopupList
+  readonly chainId: number | null;
+  readonly openModal: ApplicationModal | null;
+  readonly popupList: PopupList;
 }
 
 const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
   popupList: [],
-}
+};
 
 const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
     updateChainId(state, action) {
-      const { chainId } = action.payload
-      state.chainId = chainId
+      const { chainId } = action.payload;
+      state.chainId = chainId;
     },
     setOpenModal(state, action) {
-      state.openModal = action.payload
+      state.openModal = action.payload;
     },
     addPopup(state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) {
       state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([
@@ -68,17 +71,17 @@ const applicationSlice = createSlice({
           content,
           removeAfterMs,
         },
-      ])
+      ]);
     },
     removePopup(state, { payload: { key } }) {
       state.popupList.forEach((p) => {
         if (p.key === key) {
-          p.show = false
+          p.show = false;
         }
-      })
+      });
     },
   },
-})
+});
 
-export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions
-export default applicationSlice.reducer
+export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions;
+export default applicationSlice.reducer;

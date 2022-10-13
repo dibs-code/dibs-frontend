@@ -1,3 +1,4 @@
+import ClipboardPopup from 'components/popups/ClipboardPopup';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useRemovePopup } from '../../state/application/hooks';
@@ -42,6 +43,8 @@ export default function PopupItem({
       txn: { hash },
     } = content;
     popupContent = <TransactionPopup hash={hash} show={show} />;
+  } else if ('clipboard' in content) {
+    popupContent = <ClipboardPopup show={show} />;
   }
 
   return (
