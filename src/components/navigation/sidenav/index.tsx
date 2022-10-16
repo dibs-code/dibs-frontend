@@ -1,4 +1,4 @@
-import { faCircleC, faFileChartColumn, faGift, faRightLeft } from '@fortawesome/pro-solid-svg-icons';
+import { faCircleC, faGift, faRightLeft } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useWeb3React } from '@web3-react/core';
 import WalletModal from 'components/WalletModal';
@@ -38,7 +38,7 @@ const Sidenav = () => {
     () => [
       { name: 'Your code', icon: faCircleC, address: RoutePath.HOME },
       { name: 'Rewards', icon: faGift, address: RoutePath.REWARDS },
-      { name: 'Reports', icon: faFileChartColumn, address: RoutePath.REPORTS },
+      // { name: 'Reports', icon: faFileChartColumn, address: RoutePath.REPORTS },
       { name: 'Test swap', icon: faRightLeft, address: RoutePath.TEST_SWAP },
     ],
     [],

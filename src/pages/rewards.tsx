@@ -147,6 +147,7 @@ const Rewards = () => {
   }, [now, activeLotteryRound, firstRoundStartTime, roundDuration]);
 
   return (
+
     <div className={'px-40 py-14'}>
       <Modal className={'!max-w-lg'} title={'Claimable Fee List'} open={open} closeModal={closeModal}>
         {balancesToClaim.length ? (
