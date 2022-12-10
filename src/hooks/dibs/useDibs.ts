@@ -179,14 +179,14 @@ export function useDibsLottery() {
 
   const lotteryWinnerCall = useMemo(() => {
     if (!activeLotteryRound) return [];
-    return [dibsInterface.encodeFunctionData('lotteryWinners', [activeLotteryRound - 1])];
+    return [dibsInterface.encodeFunctionData('roundToWinner', [activeLotteryRound - 1])];
   }, [activeLotteryRound]);
 
   const [lotteryWinnerResult] = useSingleContractWithCallData(dibsContract, lotteryWinnerCall);
 
   const userLotteryStatus = useMemo(() => {
     if (!account || !lotteryWinnerResult?.result) return LotteryStatus.UNKNOWN;
-    const lotteryWinner: ContractFunctionReturnType<Dibs['callStatic']['lotteryWinners']> =
+    const lotteryWinner: ContractFunctionReturnType<Dibs['callStatic']['roundToWinner']> =
       lotteryWinnerResult?.result?.[0];
     if (lotteryWinner === account) return LotteryStatus.WON;
     return LotteryStatus.LOST;

@@ -47,7 +47,7 @@ const YourCode = (props: ModalProps) => {
       return;
     }
     if (!isSupportedChain(chainId)) {
-      await selectChain(SupportedChainId.GOERLI);
+      await selectChain(SupportedChainId.BSC);
       return;
     }
     if (loading) return;

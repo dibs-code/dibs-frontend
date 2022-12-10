@@ -16,9 +16,9 @@ export const USDC_RINKEBY = new Token(
   'tUSDC',
   'test USD//C',
 );
-export const USDC_GOERLI = new Token(
-  SupportedChainId.GOERLI,
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
+export const USDC_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
   6,
   'USDC',
   'USD//C',
@@ -40,7 +40,7 @@ export const DAI = new Token(
 
 export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.MAINNET]: USDC_MAINNET,
-  [SupportedChainId.GOERLI]: USDC_GOERLI,
+  [SupportedChainId.BSC]: USDC_BSC,
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
 };
 export const USDT = new Token(
@@ -157,7 +157,7 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
   USDC: {
     [SupportedChainId.MAINNET]: USDC_MAINNET.address,
-    [SupportedChainId.GOERLI]: USDC_GOERLI.address,
+    [SupportedChainId.BSC]: USDC_BSC.address,
     [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
   },
 };

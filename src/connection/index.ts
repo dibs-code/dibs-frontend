@@ -27,7 +27,7 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: RPC_URLS, defaultChainId: SupportedChainId.GOERLI }),
+  (actions) => new Network({ actions, urlMap: RPC_URLS, defaultChainId: SupportedChainId.BSC }),
 );
 export const networkConnection: Connection = {
   connector: web3Network,

@@ -11,7 +11,7 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
     // case SupportedChainId.ROPSTEN:
     // case SupportedChainId.KOVAN:
     // eslint-disable-next-line no-fallthrough
-    case SupportedChainId.GOERLI:
+    case SupportedChainId.BSC:
       return [RPC_URLS[chainId]];
     // case SupportedChainId.OPTIMISM:
     //   return ['https://mainnet.optimism.io']

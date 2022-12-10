@@ -58,13 +58,13 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Rinkeby',
     nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
   },
-  [SupportedChainId.GOERLI]: {
+  [SupportedChainId.BSC]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
-    explorer: 'https://goerli.etherscan.io/',
+    explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Görli',
-    nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
+    label: 'Binance Smart Chain',
+    nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
   },
 };
 
