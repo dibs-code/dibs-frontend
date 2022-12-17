@@ -31,7 +31,7 @@ export default function useAccumulativeTokenBalances(user: string | undefined, i
   const refreshData = useCallback(() => {
     if (user && chainId) {
       fetchQuery<AccumulativeTokenBalancesQueryType>(environment, query, {
-        user: user.toLowerCase(),
+        user,
       }).subscribe({
         next: setData,
         error: setError,
