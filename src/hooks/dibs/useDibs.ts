@@ -6,8 +6,10 @@ import { ZERO_ADDRESS } from 'constants/addresses';
 import { useDibsContract } from 'hooks/useContract';
 import { useSingleContractMultipleData, useSingleContractWithCallData } from 'lib/hooks/multicall';
 import { useMemo } from 'react';
+import ms from 'ms.macro'
 
 import { Dibs } from '../../abis/types';
+import useAccumulativeTokenBalances from "../../graphql/thegraph/AccumulativeTokenBalancesQuery";
 
 const dibsInterface = new Interface(DIBS_ABI);
 
@@ -68,28 +70,16 @@ export function useDibs() {
   const parentCodeName: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> =
     parentCodeNameResult?.result?.[0] || '';
 
-  const userTokensCount = 10;
+  const accumulativeTokenBalances = useAccumulativeTokenBalances(account, ms`30s`)
 
-  const userTokensCall = useMemo(() => {
-    if (!account) return [];
-    return Array.from(Array(userTokensCount).keys()).map((i) => [account, i]);
-  }, [account]);
 
-  const userTokensResult = useSingleContractMultipleData(dibsContract, 'userTokens', userTokensCall);
   const userTokens = useMemo(() => {
     const tokens: string[] = [];
-    userTokensResult.forEach((r) => {
-      if (r.result) tokens.push(r.result[0]);
+    accumulativeTokenBalances.data?.accumulativeTokenBalances.forEach((atb) => {
+      tokens.push(atb.token);
     });
     return tokens;
-  }, [userTokensResult]);
-
-  const accBalancesCall = useMemo(() => {
-    if (!account) return [];
-    return userTokens.map((tokenAddress) => [tokenAddress, account]);
-  }, [account, userTokens]);
-
-  const accBalancesResult = useSingleContractMultipleData(dibsContract, 'accBalance', accBalancesCall);
+  }, [accumulativeTokenBalances.data?.accumulativeTokenBalances]);
 
   const claimedBalancesCall = useMemo(() => {
     if (!account) return [];
@@ -99,16 +89,16 @@ export function useDibs() {
   const claimedBalancesResult = useSingleContractMultipleData(dibsContract, 'claimedBalance', claimedBalancesCall);
 
   const balances = useMemo((): AccBalanceObject[] => {
-    const accBalancesResultLoaded = accBalancesResult.filter((r) => !!r.result);
-    if (accBalancesResultLoaded.length < userTokens.length) return [];
+    if(!accumulativeTokenBalances.data) return []
+    const accBalancesResultLoaded = accumulativeTokenBalances.data.accumulativeTokenBalances;
     const claimedBalancesResultLoaded = claimedBalancesResult.filter((r) => !!r.result);
     if (claimedBalancesResultLoaded.length < userTokens.length) return [];
     return userTokens.map((tokenAddress, i) => ({
       tokenAddress,
-      balance: accBalancesResultLoaded[i]!.result![0],
+      balance: BigNumber.from(Number(accBalancesResultLoaded[i].amount) * Math.pow(10, -9)).mul(BigNumber.from(10).pow(9)),
       claimedBalance: claimedBalancesResultLoaded[i]!.result![0],
     }));
-  }, [accBalancesResult, claimedBalancesResult, userTokens]);
+  }, [accumulativeTokenBalances.data, claimedBalancesResult, userTokens]);
 
   const claimedBalances = useMemo((): BalanceObject[] => {
     return balances.map((b) => ({
@@ -132,7 +122,7 @@ export function useDibs() {
     return balancesToClaim;
   }, [account, balances, dibsContract]);
 
-  return { addressToName, parentCodeName, userTokensResult, balances, balancesToClaim, claimedBalances };
+  return { addressToName, parentCodeName, balances, balancesToClaim, claimedBalances };
 }
 
 export function useDibsLottery() {
