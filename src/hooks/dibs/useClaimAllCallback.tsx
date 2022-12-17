@@ -27,15 +27,16 @@ export default function useClaimAllCallback(balanceToClaim: BalanceObject): UseC
       {
         address: dibsContract.address,
         calldata:
-          dibsContract.interface.encodeFunctionData('claim', [
-            balanceToClaim.tokenAddress,
-            balanceToClaim.balance,
-            account,
-          ]) ?? '',
+          // dibsContract.interface.encodeFunctionData('claim', [
+          //   balanceToClaim.tokenAddress,
+          //   balanceToClaim.balance,
+          //   account,
+          // ]) ??
+          '',
         value: '0x0',
       },
     ];
-  }, [account, balanceToClaim, dibsContract]);
+  }, [account, dibsContract]);
 
   const info: ClaimFeeTransactionInfo = {
     type: TransactionType.CLAIM_FEE,
