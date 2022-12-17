@@ -147,7 +147,6 @@ const Rewards = () => {
   }, [now, activeLotteryRound, firstRoundStartTime, roundDuration]);
 
   return (
-
     <div className={'px-40 py-14'}>
       <Modal className={'!max-w-lg'} title={'Claimable Fee List'} open={open} closeModal={closeModal}>
         {balancesToClaim.length ? (
@@ -225,9 +224,7 @@ const Rewards = () => {
                 <div className={'lottery-card  px-12 py-8'}>
                   <section className={'flex justify-between '}>
                     <div className={''}>
-                      <h4 className={'mb-6'}>
-                        You have {userLotteryTickets.toNumber()} tickets for this week&apos;s lottery
-                      </h4>
+                      <h4 className={'mb-6'}>You have {userLotteryTickets} tickets for this week&apos;s lottery</h4>
                       {userLotteryStatus !== LotteryStatus.UNKNOWN && (
                         <div>
                           <p className={'text-sm font-normal text-dark-gray-2'}>Last week result</p>

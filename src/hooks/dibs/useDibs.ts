@@ -5,11 +5,12 @@ import DIBS_ABI from 'abis/dibs.json';
 import { ZERO_ADDRESS } from 'constants/addresses';
 import { useDibsContract } from 'hooks/useContract';
 import { useSingleContractMultipleData, useSingleContractWithCallData } from 'lib/hooks/multicall';
+import ms from 'ms.macro';
 import { useMemo } from 'react';
-import ms from 'ms.macro'
 
 import { Dibs } from '../../abis/types';
-import useAccumulativeTokenBalances from "../../graphql/thegraph/AccumulativeTokenBalancesQuery";
+import useAccumulativeTokenBalances from '../../graphql/thegraph/AccumulativeTokenBalancesQuery';
+import useUserLotteries from '../../graphql/thegraph/UserLotteriesQuery';
 
 const dibsInterface = new Interface(DIBS_ABI);
 
@@ -70,8 +71,7 @@ export function useDibs() {
   const parentCodeName: ContractFunctionReturnType<Dibs['callStatic']['getCodeName']> =
     parentCodeNameResult?.result?.[0] || '';
 
-  const accumulativeTokenBalances = useAccumulativeTokenBalances(account, ms`30s`)
-
+  const accumulativeTokenBalances = useAccumulativeTokenBalances(account, ms`30s`);
 
   const userTokens = useMemo(() => {
     const tokens: string[] = [];
@@ -89,13 +89,15 @@ export function useDibs() {
   const claimedBalancesResult = useSingleContractMultipleData(dibsContract, 'claimedBalance', claimedBalancesCall);
 
   const balances = useMemo((): AccBalanceObject[] => {
-    if(!accumulativeTokenBalances.data) return []
+    if (!accumulativeTokenBalances.data) return [];
     const accBalancesResultLoaded = accumulativeTokenBalances.data.accumulativeTokenBalances;
     const claimedBalancesResultLoaded = claimedBalancesResult.filter((r) => !!r.result);
     if (claimedBalancesResultLoaded.length < userTokens.length) return [];
     return userTokens.map((tokenAddress, i) => ({
       tokenAddress,
-      balance: BigNumber.from(Number(accBalancesResultLoaded[i].amount) * Math.pow(10, -9)).mul(BigNumber.from(10).pow(9)),
+      balance: BigNumber.from(Number(accBalancesResultLoaded[i].amount) * Math.pow(10, -9)).mul(
+        BigNumber.from(10).pow(9),
+      ),
       claimedBalance: claimedBalancesResultLoaded[i]!.result![0],
     }));
   }, [accumulativeTokenBalances.data, claimedBalancesResult, userTokens]);
@@ -157,15 +159,7 @@ export function useDibsLottery() {
 
   const { account } = useWeb3React();
 
-  const userLotteryTicketsCall = useMemo(() => {
-    if (!account || !activeLotteryRound) return [];
-    return [dibsInterface.encodeFunctionData('userLotteryTickets', [activeLotteryRound, account])];
-  }, [account, activeLotteryRound]);
-
-  const [userLotteryTicketsResult] = useSingleContractWithCallData(dibsContract, userLotteryTicketsCall);
-
-  const userLotteryTickets: ContractFunctionReturnType<Dibs['callStatic']['userLotteryTickets']> =
-    userLotteryTicketsResult?.result?.[0] || BigNumber.from(0);
+  const userLotteryTickets = useUserLotteries(account, activeLotteryRound, ms`30s`).data?.userLotteries.length || 0;
 
   const lotteryWinnerCall = useMemo(() => {
     if (!activeLotteryRound) return [];

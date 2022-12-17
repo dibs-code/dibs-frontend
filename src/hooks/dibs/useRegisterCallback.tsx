@@ -1,12 +1,12 @@
+import { keccak256 } from '@ethersproject/keccak256';
 import { TransactionResponse } from '@ethersproject/providers';
+import { toUtf8Bytes } from '@ethersproject/strings';
 import { useWeb3React } from '@web3-react/core';
 import { useDibsContract } from 'hooks/useContract';
 import React, { ReactNode, useMemo } from 'react';
 import { RegisterTransactionInfo, TransactionType } from 'state/transactions/types';
 
 import useDibsTransaction from './useDibsTransaction';
-import {keccak256} from "@ethersproject/keccak256";
-import {toUtf8Bytes} from "@ethersproject/strings";
 
 export enum CallbackState {
   INVALID,

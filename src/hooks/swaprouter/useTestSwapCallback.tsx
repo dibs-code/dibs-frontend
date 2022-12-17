@@ -1,6 +1,6 @@
+import { BigNumberish } from '@ethersproject/bignumber';
 import { TransactionResponse } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
-import { BigNumberish } from 'ethers';
 import useSwapRouterTransaction from 'hooks/swaprouter/useSwapRouterTransaction';
 import { useSwapRouterContract } from 'hooks/useContract';
 import React, { ReactNode, useMemo } from 'react';

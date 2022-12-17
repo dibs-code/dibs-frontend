@@ -5,11 +5,11 @@ import { Web3Provider } from '@ethersproject/providers';
 import MulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json';
 import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
-import SwapRouter_ABI from 'abis/SwapRouter.json';
 import ERC20_ABI from 'abis/erc20.json';
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json';
-import {Dibs, Erc20, SwapRouter} from 'abis/types';
-import {DIBS_ADDRESS, MULTICALL_ADDRESS, SWAP_ROUTER_ADDRESS} from 'constants/addresses';
+import SwapRouter_ABI from 'abis/SwapRouter.json';
+import { Dibs, Erc20, SwapRouter } from 'abis/types';
+import { DIBS_ADDRESS, MULTICALL_ADDRESS, SWAP_ROUTER_ADDRESS } from 'constants/addresses';
 import { Providers } from 'constants/providers';
 import { useMemo } from 'react';
 
