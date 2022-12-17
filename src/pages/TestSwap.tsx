@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core';
 import Input from 'components/basic/input';
 import SubmittedModal from 'components/modal/submitted';
 import Sidenav from 'components/navigation/sidenav';
-import { DIBS_ADDRESS } from 'constants/addresses';
+import { SWAP_ROUTER_ADDRESS } from 'constants/addresses';
 import { useTestSwapCallback } from 'hooks/swaprouter/useTestSwapCallback';
 import { useToken } from 'hooks/Tokens';
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback';
@@ -41,7 +41,7 @@ const TestSwap = () => {
 
   const [approvalToken, approveTokenCallback] = useApproveCallback(
     parsedAmount,
-    chainId ? DIBS_ADDRESS[chainId] : undefined,
+    chainId ? SWAP_ROUTER_ADDRESS[chainId] : undefined,
   );
 
   const { callback: testSwapCallback } = useTestSwapCallback({
