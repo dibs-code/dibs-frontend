@@ -25,7 +25,13 @@ export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 
 const YourCode = (props: ModalProps) => {
   const { chainId, account } = useWeb3React();
-  const { addressToName, parentCodeName } = useDibs();
+  const { addressToName, parentCodeName: parentCodeNameFromContract } = useDibs();
+  const [parentCodeName, setParentCodeName] = useState("");
+
+  useEffect(() => {
+    setParentCodeName(parentCodeNameFromContract)
+  }, [parentCodeNameFromContract]);
+
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
 
   const mounted = useRef(false);
@@ -39,7 +45,7 @@ const YourCode = (props: ModalProps) => {
   const [loading, setLoading] = useState(false);
   const [submittedTxHash, setSubmittedTxHash] = useState<string | null>(null);
   const [name, setName] = useState('');
-  const { callback: registerCallback } = useRegisterCallback(name);
+  const { callback: registerCallback } = useRegisterCallback(name, parentCodeName);
   const selectChain = useSelectChain();
   const create = useCallback(async () => {
     if (!account) {
@@ -161,7 +167,7 @@ const YourCode = (props: ModalProps) => {
             />
             <Input
               value={parentCodeName}
-              disabled={true}
+              onUserInput={setParentCodeName}
               className={'flex-auto'}
               label={'Your Referral Code'}
               placeholder={'No referral code found'}

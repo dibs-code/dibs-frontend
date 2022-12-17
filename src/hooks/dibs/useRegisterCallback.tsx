@@ -5,6 +5,8 @@ import React, { ReactNode, useMemo } from 'react';
 import { RegisterTransactionInfo, TransactionType } from 'state/transactions/types';
 
 import useDibsTransaction from './useDibsTransaction';
+import {keccak256} from "@ethersproject/keccak256";
+import {toUtf8Bytes} from "@ethersproject/strings";
 
 export enum CallbackState {
   INVALID,
@@ -17,21 +19,22 @@ interface UseCallbackReturns {
   error?: ReactNode;
 }
 
-export function useRegisterCallback(name: string): UseCallbackReturns {
+export function useRegisterCallback(name: string, parentName: string): UseCallbackReturns {
   const { account, chainId, provider } = useWeb3React();
   const dibsContract = useDibsContract();
   const calls = useMemo(() => {
     if (!dibsContract || !account || !name) {
       return [];
     }
+    const parentCode = keccak256(toUtf8Bytes(parentName));
     return [
       {
         address: dibsContract.address,
-        calldata: dibsContract.interface.encodeFunctionData('register', [account, name]) ?? '',
+        calldata: dibsContract.interface.encodeFunctionData('register', [account, name, parentCode]) ?? '',
         value: '0x0',
       },
     ];
-  }, [dibsContract, account, name]);
+  }, [dibsContract, account, name, parentName]);
 
   const info: RegisterTransactionInfo = {
     type: TransactionType.REGISTER,
