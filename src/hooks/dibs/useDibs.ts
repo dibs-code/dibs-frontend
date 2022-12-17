@@ -1,9 +1,10 @@
 import { Interface } from '@ethersproject/abi';
-import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
 import { ZERO_ADDRESS } from 'constants/addresses';
+import { BIG_INT_ZERO } from 'constants/misc';
 import { useDibsContract } from 'hooks/useContract';
+import JSBI from 'jsbi';
 import { useSingleContractMultipleData, useSingleContractWithCallData } from 'lib/hooks/multicall';
 import ms from 'ms.macro';
 import { useMemo } from 'react';
@@ -31,11 +32,11 @@ export type ContractFunctionReturnType<T> = T extends (...args: any) => Promise<
 
 export interface BalanceObject {
   tokenAddress: string;
-  balance: BigNumber;
+  balance: JSBI;
 }
 
 export interface AccBalanceObject extends BalanceObject {
-  claimedBalance: BigNumber;
+  claimedBalance: JSBI;
 }
 
 export function useDibs() {
@@ -95,10 +96,8 @@ export function useDibs() {
     if (claimedBalancesResultLoaded.length < userTokens.length) return [];
     return userTokens.map((tokenAddress, i) => ({
       tokenAddress,
-      balance: BigNumber.from(Number(accBalancesResultLoaded[i].amount) * Math.pow(10, -9)).mul(
-        BigNumber.from(10).pow(9),
-      ),
-      claimedBalance: claimedBalancesResultLoaded[i]!.result![0],
+      balance: JSBI.BigInt(accBalancesResultLoaded[i].amount),
+      claimedBalance: JSBI.BigInt(claimedBalancesResultLoaded[i]!.result![0].toString()),
     }));
   }, [accumulativeTokenBalances.data, claimedBalancesResult, userTokens]);
 
@@ -113,8 +112,8 @@ export function useDibs() {
     if (!dibsContract || !account) return [];
     const balancesToClaim: BalanceObject[] = [];
     balances.forEach((b) => {
-      const balanceToClaim = BigNumber.from(b.balance).sub(b.claimedBalance);
-      if (balanceToClaim && !balanceToClaim.isZero()) {
+      const balanceToClaim = JSBI.subtract(b.balance, b.claimedBalance);
+      if (balanceToClaim && !JSBI.equal(balanceToClaim, BIG_INT_ZERO)) {
         balancesToClaim.push({
           tokenAddress: b.tokenAddress,
           balance: balanceToClaim,
