@@ -3,7 +3,7 @@ import Input from 'components/basic/input';
 import SubmittedModal from 'components/modal/submitted';
 import Sidenav from 'components/navigation/sidenav';
 import { DIBS_ADDRESS } from 'constants/addresses';
-import { useTestSwapCallback } from 'hooks/dibs/useTestSwapCallback';
+import { useTestSwapCallback } from 'hooks/swaprouter/useTestSwapCallback';
 import { useToken } from 'hooks/Tokens';
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback';
 import { useTokenBalance } from 'hooks/useCurrencyBalance';
@@ -19,16 +19,20 @@ const TestSwap = () => {
       setUser(account);
     }
   }, [account]);
-  const [parentName, setParentName] = useState('');
 
-  const [totalFees, setTotalFees] = useState('0.01');
+  const [amountIn, setAmountIn] = useState('0.0000001');
   const [submittedTxHash, setSubmittedTxHash] = useState<string | null>(null);
-  const [totalVolume, setTotalVolume] = useState(10);
-  const [tokenAddress, setTokenAddress] = useState('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984');
-  const token = useToken(tokenAddress);
-  const tokenBalance = useTokenBalance(account ?? undefined, token || undefined);
+  const [tokenFromAddress, setTokenFromAddress] = useState('0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56');
+  const tokenFrom = useToken(tokenFromAddress);
+  const tokenBalance = useTokenBalance(account ?? undefined, tokenFrom || undefined);
+  const [tokenToAddress, setTokenToAddress] = useState('0x55d398326f99059fF775485246999027B3197955');
+  const tokenTo = useToken(tokenToAddress);
 
-  const parsedAmount = useMemo(() => tryParseCurrencyAmount(totalFees, token || undefined), [token, totalFees]);
+  const parsedAmount = useMemo(() => tryParseCurrencyAmount(amountIn, tokenFrom || undefined), [tokenFrom, amountIn]);
+  const parsedAmountOut = useMemo(
+    () => tryParseCurrencyAmount(String(Number(amountIn) * 0.8), tokenFrom || undefined),
+    [tokenFrom, amountIn],
+  );
 
   const insufficientBalance = useMemo(
     () => tokenBalance && parsedAmount && tokenBalance.lessThan(parsedAmount),
@@ -41,11 +45,13 @@ const TestSwap = () => {
   );
 
   const { callback: testSwapCallback } = useTestSwapCallback({
-    user,
-    parentName,
-    totalFees: parsedAmount?.quotient.toString() || '0',
-    totalVolume,
-    token: tokenAddress,
+    amountIn: parsedAmount?.quotient.toString() || '0',
+    amountOutMin: parsedAmountOut?.quotient.toString() || '0',
+    to: user || '',
+    deadline: 1970418853,
+    stable: true,
+    tokenFrom: tokenFromAddress,
+    tokenTo: tokenToAddress,
   });
 
   const [loading, setLoading] = useState(false);
@@ -59,10 +65,6 @@ const TestSwap = () => {
 
   const swap = useCallback(async () => {
     if (loading) return;
-    if (!parentName) {
-      alert('Parent Code is required');
-      return;
-    }
     setLoading(true);
     try {
       const tx = await testSwapCallback?.();
@@ -76,10 +78,11 @@ const TestSwap = () => {
     if (mounted.current) {
       setLoading(false);
     }
-  }, [loading, parentName, testSwapCallback]);
+  }, [loading, testSwapCallback]);
 
   function renderButton() {
-    const tokenSymbol = token ? token.symbol : 'Unknown';
+    const tokenSymbol = tokenFrom ? tokenFrom.symbol : 'Unknown';
+    const tokenToSymbol = tokenTo ? tokenTo.symbol : 'Unknown';
     if (insufficientBalance) {
       return (
         <button className={'btn-primary btn-large font-medium mt-6 px-12'}>Insufficient {tokenSymbol} balance</button>
@@ -105,7 +108,7 @@ const TestSwap = () => {
     }
     return (
       <button className={`btn-primary btn-large font-medium mt-6 px-12`} onClick={swap}>
-        Swap {token ? token.symbol : 'Unknown'}
+        Swap {tokenSymbol} to {tokenToSymbol}
       </button>
     );
   }
@@ -131,36 +134,28 @@ const TestSwap = () => {
             label={'User Address'}
             placeholder={'Enter Address'}
           />
-          <Input
-            className={'w-5/12'}
-            value={parentName}
-            onUserInput={setParentName}
-            label={'Parent Code'}
-            placeholder={'Enter Code'}
-          />
         </section>
         <section className={'mt-2 gap-4 flex'}>
           <Input
             type={'number'}
             className={'flex-auto'}
-            value={totalFees}
-            onUserInput={setTotalFees}
-            label={'Total Fees'}
-            placeholder={'Enter Amount'}
-          />
-          <Input
-            type={'number'}
-            className={'flex-auto'}
-            value={totalVolume}
-            onUserInput={(val) => setTotalVolume(Number(val))}
-            label={'Total Volume'}
+            value={amountIn}
+            onUserInput={setAmountIn}
+            label={'Amount In'}
             placeholder={'Enter Amount'}
           />
           <Input
             className={'flex-auto'}
-            value={tokenAddress}
-            onUserInput={setTokenAddress}
-            label={'Token Address'}
+            value={tokenFromAddress}
+            onUserInput={setTokenFromAddress}
+            label={'From Token Address'}
+            placeholder={'Enter Address'}
+          />
+          <Input
+            className={'flex-auto'}
+            value={tokenToAddress}
+            onUserInput={setTokenToAddress}
+            label={'To Token Address'}
             placeholder={'Enter Address'}
           />
         </section>

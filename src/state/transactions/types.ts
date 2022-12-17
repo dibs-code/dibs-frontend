@@ -36,9 +36,8 @@ export interface RegisterTransactionInfo extends BaseTransactionInfo {
   name: string;
 }
 
-export interface RewardTransactionInfo extends BaseTransactionInfo {
+export interface TestSwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.REWARD;
-  parentName: string;
 }
 
 export interface ClaimFeeTransactionInfo extends BaseTransactionInfo {
@@ -48,7 +47,7 @@ export interface ClaimFeeTransactionInfo extends BaseTransactionInfo {
 export type TransactionInfo =
   | ApproveTransactionInfo
   | RegisterTransactionInfo
-  | RewardTransactionInfo
+  | TestSwapTransactionInfo
   | ClaimFeeTransactionInfo;
 
 export interface TransactionDetails {

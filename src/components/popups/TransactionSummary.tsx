@@ -6,7 +6,7 @@ import {
   ApproveTransactionInfo,
   ClaimFeeTransactionInfo,
   RegisterTransactionInfo,
-  RewardTransactionInfo,
+  TestSwapTransactionInfo,
   TransactionInfo,
   TransactionType,
 } from '../../state/transactions/types';
@@ -50,15 +50,15 @@ function RegisterSummary({ info }: { info: RegisterTransactionInfo }) {
   );
 }
 
-function RewardSummary({ info }: { info: RewardTransactionInfo }) {
+function RewardSummary({ info: _info }: { info: TestSwapTransactionInfo }) {
   return (
     <span>
-      Reward to <span className={'font-bold'}>{info.parentName}</span>
+      Test Swap done
     </span>
   );
 }
 
-function ClaimFeeSummary({ info }: { info: ClaimFeeTransactionInfo }) {
+function ClaimFeeSummary({ info: _info }: { info: ClaimFeeTransactionInfo }) {
   return <span>Claimed successfully</span>;
 }
 
