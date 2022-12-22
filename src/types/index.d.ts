@@ -1,21 +1,3 @@
-import { ChoiceStruct } from './contracts/Arena';
-
-export type SongTag = { subject: string; title: string };
-
-export type SongMeta = {
-  thumbnail: string;
-  title: string;
-  tags: SongTag[];
-  by: string;
-  date: string;
-  opensea: string;
-};
-
-export type Choice = ChoiceStruct & {
-  meta?: SongMeta | null;
-  id: number;
-};
-
 export enum TransactionStatus {
   SUCCESS,
   PENDING,
@@ -28,4 +10,53 @@ export type Transaction = {
   amount: string;
   tokenSymbol: string;
   amountTo: string;
+};
+
+export type MuonVerificationData = {
+  success: boolean;
+  result: {
+    app: string;
+    appId: string;
+    cid: string;
+    confirmed: boolean;
+    confirmedAt: number;
+    data: {
+      init: {
+        nonceAddress: string;
+      };
+      params: {
+        sign: string;
+        time: string;
+        token: string;
+        user: string;
+      };
+      result: {
+        balance: string;
+        token: string;
+        user: string;
+      };
+      signParams: {
+        name?: string;
+        type: string;
+        value: string;
+      }[];
+      timestamp: number;
+      uid: string;
+    };
+    gwAddress: string;
+    method: string;
+    nSign: number;
+    nodeSignature: string;
+    reqId: string;
+    shieldAddress: string;
+    shieldSignature: string;
+    signatures: {
+      owner: string;
+      ownerPubKey: { x: string; yParity: string };
+      result: { user: string; token: string; balance: string };
+      signature: string;
+      timestamp: number;
+    }[];
+    startedAt: number;
+  };
 };

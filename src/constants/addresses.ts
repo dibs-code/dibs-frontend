@@ -15,3 +15,7 @@ export const DIBS_ADDRESS: AddressMap = {
 export const SWAP_ROUTER_ADDRESS: AddressMap = {
   [SupportedChainId.BSC]: '0x9B237893321b2D447E1D1Ae02004ebA30b187D0d',
 };
+
+export const MUON_INTERFACE_V1_ADDRESS: AddressMap = {
+  [SupportedChainId.BSC]: '0x4b098F271dAad1aAEb60A282F46205C184f2B0C8',
+};

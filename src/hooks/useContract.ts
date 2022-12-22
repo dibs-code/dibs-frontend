@@ -7,9 +7,10 @@ import { useWeb3React } from '@web3-react/core';
 import DIBS_ABI from 'abis/dibs.json';
 import ERC20_ABI from 'abis/erc20.json';
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json';
+import MuonInterfaceV1_ABI from 'abis/MuonInterfaceV1.json';
 import SwapRouter_ABI from 'abis/SwapRouter.json';
-import { Dibs, Erc20, SwapRouter } from 'abis/types';
-import { DIBS_ADDRESS, MULTICALL_ADDRESS, SWAP_ROUTER_ADDRESS } from 'constants/addresses';
+import { Dibs, Erc20, MuonInterfaceV1, SwapRouter } from 'abis/types';
+import { DIBS_ADDRESS, MULTICALL_ADDRESS, MUON_INTERFACE_V1_ADDRESS, SWAP_ROUTER_ADDRESS } from 'constants/addresses';
 import { Providers } from 'constants/providers';
 import { useMemo } from 'react';
 
@@ -87,4 +88,8 @@ export function useDibsContract() {
 
 export function useSwapRouterContract() {
   return useContract<SwapRouter>(SWAP_ROUTER_ADDRESS, SwapRouter_ABI, true);
+}
+
+export function useMuonInterfaceV1Contract() {
+  return useContract<MuonInterfaceV1>(MUON_INTERFACE_V1_ADDRESS, MuonInterfaceV1_ABI, true);
 }

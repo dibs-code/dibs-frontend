@@ -2,14 +2,18 @@
 import { faCircleDollarToSlot, faGift, faTicket } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CurrencyAmount } from '@uniswap/sdk-core';
+import { useWeb3React } from '@web3-react/core';
+import axios from 'axios';
 import Modal from 'components/modal';
 import SubmittedModal from 'components/modal/submitted';
 import Sidenav from 'components/navigation/sidenav';
-import useClaimAllCallback from 'hooks/dibs/useClaimAllCallback';
 import { BalanceObject, LotteryStatus, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
+import useGetMuonSignature from 'hooks/muon/useMuonSignature';
 import { useToken } from 'hooks/Tokens';
 import JSBI from 'jsbi';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { MuonVerificationData } from '../types';
 
 const AccBalance = (props: { obj: BalanceObject }) => {
   const token = useToken(props.obj.tokenAddress);
@@ -37,7 +41,7 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
     return CurrencyAmount.fromRawAmount(token, amount).toSignificant(5);
   }, [props.obj.balance, token]);
 
-  const { callback: claimAllCallback } = useClaimAllCallback(props.obj);
+  // const { callback: claimAllCallback } = useClaimCallback(props.obj);
   const [submittedTxHash, setSubmittedTxHash] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const mounted = useRef(false);
@@ -47,15 +51,22 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
       mounted.current = false;
     };
   }, []);
-
+  const { account } = useWeb3React();
+  const getMuonSignature = useGetMuonSignature();
   const claim = useCallback(async () => {
     if (loading) return;
     setLoading(true);
     try {
-      const tx = await claimAllCallback?.();
-      if (tx) {
-        setSubmittedTxHash(tx.hash);
-      }
+      const timestamp = Math.floor(Date.now() / 1000);
+      const sig = await getMuonSignature(account, timestamp);
+      const verificationData = await axios.get<MuonVerificationData>(
+        `https://dibs-shield.muon.net/v1/?app=dibs&method=claim&params[user]=${account}&params[token]=${props.obj.tokenAddress}&params[time]=${timestamp}&params[sign]=${sig}`,
+      );
+      console.log({ verificationData });
+      // const tx = await claimAllCallback?.();
+      // if (tx) {
+      //   setSubmittedTxHash(tx.hash);
+      // }
     } catch (e) {
       console.log('swap failed');
       console.log(e);
@@ -63,7 +74,7 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
     if (mounted.current) {
       setLoading(false);
     }
-  }, [loading, claimAllCallback]);
+  }, [account, getMuonSignature, loading, props.obj.tokenAddress]);
 
   function getLogoSrc(symbol: string | null | undefined) {
     if (symbol && ['eth', 'uni', 'usdc'].includes(symbol.toLowerCase())) {

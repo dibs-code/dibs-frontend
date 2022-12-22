@@ -1,11 +1,11 @@
 import { TransactionResponse } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { BalanceObject } from 'hooks/dibs/useDibs';
-import { useDibsContract } from 'hooks/useContract';
+import { useMuonInterfaceV1Contract } from 'hooks/useContract';
 import React, { ReactNode, useMemo } from 'react';
 import { ClaimFeeTransactionInfo, TransactionType } from 'state/transactions/types';
 
-import useDibsTransaction from './useDibsTransaction';
+import useDibsTransaction from '../dibs/useDibsTransaction';
 
 export enum CallbackState {
   INVALID,
@@ -18,25 +18,26 @@ interface UseCallbackReturns {
   error?: ReactNode;
 }
 
-export default function useClaimAllCallback(balanceToClaim: BalanceObject): UseCallbackReturns {
+export default function useClaimCallback(balanceToClaim: BalanceObject): UseCallbackReturns {
   const { account, chainId, provider } = useWeb3React();
-  const dibsContract = useDibsContract();
+  const muonContract = useMuonInterfaceV1Contract();
   const calls = useMemo(() => {
-    if (!dibsContract || !account) return [];
+    if (!muonContract || !account) return [];
     return [
       {
-        address: dibsContract.address,
+        address: muonContract.address,
         calldata:
-          // dibsContract.interface.encodeFunctionData('claim', [
-          //   balanceToClaim.tokenAddress,
-          //   balanceToClaim.balance,
+          // muonContract.interface.encodeFunctionData('claim', [
           //   account,
+          //   balanceToClaim.tokenAddress,
+          //   account,
+          //   balanceToClaim.balance,
           // ]) ??
           '',
         value: '0x0',
       },
     ];
-  }, [account, dibsContract]);
+  }, [account, balanceToClaim, muonContract]);
 
   const info: ClaimFeeTransactionInfo = {
     type: TransactionType.CLAIM_FEE,
