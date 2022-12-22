@@ -51,9 +51,8 @@ export default function useClaimCallback(
         owner: muonVerificationData.result.signatures[0].owner,
         nonce: muonVerificationData.result.data.init.nonceAddress,
       },
-      muonVerificationData.result.shieldAddress,
+      muonVerificationData.result.shieldSignature,
     ];
-    console.log(params);
     return [
       {
         address: muonContract.address,

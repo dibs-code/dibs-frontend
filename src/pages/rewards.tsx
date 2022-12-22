@@ -62,7 +62,10 @@ const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
     try {
       const timestamp = Math.floor(Date.now() / 1000);
       const sig = await getMuonSignature(account, timestamp);
-      const verificationData = await axios.get<MuonVerificationData>(
+      const axiosInstance = axios.create({
+        baseURL: process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_MUON_API_URL,
+      });
+      const verificationData = await axiosInstance.get<MuonVerificationData>(
         `/v1/?app=dibs&method=claim&params[user]=${account}&params[token]=${props.obj.tokenAddress}&params[time]=${timestamp}&params[sign]=${sig}`,
       );
       setMuonVerificationData(verificationData.data);
