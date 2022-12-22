@@ -39,6 +39,10 @@ export interface AccBalanceObject extends BalanceObject {
   claimedBalance: JSBI;
 }
 
+export interface BalanceToClaimObject extends BalanceObject {
+  accumulativeBalance: JSBI;
+}
+
 export function useDibs() {
   const dibsContract = useDibsContract();
   const { account } = useWeb3React();
@@ -110,11 +114,12 @@ export function useDibs() {
 
   const balancesToClaim = useMemo(() => {
     if (!dibsContract || !account) return [];
-    const balancesToClaim: BalanceObject[] = [];
+    const balancesToClaim: BalanceToClaimObject[] = [];
     balances.forEach((b) => {
       const balanceToClaim = JSBI.subtract(b.balance, b.claimedBalance);
       if (balanceToClaim && !JSBI.equal(balanceToClaim, BIG_INT_ZERO)) {
         balancesToClaim.push({
+          accumulativeBalance: b.balance,
           tokenAddress: b.tokenAddress,
           balance: balanceToClaim,
         });

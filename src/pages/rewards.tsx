@@ -7,7 +7,8 @@ import axios from 'axios';
 import Modal from 'components/modal';
 import SubmittedModal from 'components/modal/submitted';
 import Sidenav from 'components/navigation/sidenav';
-import { BalanceObject, LotteryStatus, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
+import { BalanceObject, BalanceToClaimObject, LotteryStatus, useDibs, useDibsLottery } from 'hooks/dibs/useDibs';
+import useClaimCallback from 'hooks/muon/useClaimCallback';
 import useGetMuonSignature from 'hooks/muon/useMuonSignature';
 import { useToken } from 'hooks/Tokens';
 import JSBI from 'jsbi';
@@ -33,7 +34,7 @@ const NoBalance = () => {
   return <h2>0 USDC</h2>;
 };
 
-const ClaimRow = (props: { obj: BalanceObject }) => {
+const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
   const token = useToken(props.obj.tokenAddress);
   const balance = useMemo(() => {
     if (!token) return '';
@@ -41,7 +42,9 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
     return CurrencyAmount.fromRawAmount(token, amount).toSignificant(5);
   }, [props.obj.balance, token]);
 
-  // const { callback: claimAllCallback } = useClaimCallback(props.obj);
+  const [muonVerificationData, setMuonVerificationData] = useState<MuonVerificationData | null>(null);
+  const { callback: claimAllCallback } = useClaimCallback(props.obj, muonVerificationData);
+
   const [submittedTxHash, setSubmittedTxHash] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const mounted = useRef(false);
@@ -60,21 +63,21 @@ const ClaimRow = (props: { obj: BalanceObject }) => {
       const timestamp = Math.floor(Date.now() / 1000);
       const sig = await getMuonSignature(account, timestamp);
       const verificationData = await axios.get<MuonVerificationData>(
-        `https://dibs-shield.muon.net/v1/?app=dibs&method=claim&params[user]=${account}&params[token]=${props.obj.tokenAddress}&params[time]=${timestamp}&params[sign]=${sig}`,
+        `/v1/?app=dibs&method=claim&params[user]=${account}&params[token]=${props.obj.tokenAddress}&params[time]=${timestamp}&params[sign]=${sig}`,
       );
-      console.log({ verificationData });
-      // const tx = await claimAllCallback?.();
-      // if (tx) {
-      //   setSubmittedTxHash(tx.hash);
-      // }
+      setMuonVerificationData(verificationData.data);
+      const tx = await claimAllCallback?.();
+      if (tx) {
+        setSubmittedTxHash(tx.hash);
+      }
     } catch (e) {
-      console.log('swap failed');
+      console.log('claim failed');
       console.log(e);
     }
     if (mounted.current) {
       setLoading(false);
     }
-  }, [account, getMuonSignature, loading, props.obj.tokenAddress]);
+  }, [account, claimAllCallback, getMuonSignature, loading, props.obj.tokenAddress]);
 
   function getLogoSrc(symbol: string | null | undefined) {
     if (symbol && ['eth', 'uni', 'usdc'].includes(symbol.toLowerCase())) {
