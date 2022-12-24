@@ -41,6 +41,7 @@ export default function useMuonTransaction(
     }
     return {
       callback: async function onMuon(): Promise<TransactionResponse> {
+        console.log({ calls });
         const estimatedCalls: CallEstimate[] = await Promise.all(
           calls.map((call) => {
             const { address, calldata, value } = call;
@@ -79,7 +80,7 @@ export default function useMuonTransaction(
               });
           }),
         );
-
+        console.log({ estimatedCalls });
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
         let bestCallOption: SuccessfulCall | CallEstimate | undefined = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>

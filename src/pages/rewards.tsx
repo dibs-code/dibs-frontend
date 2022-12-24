@@ -34,6 +34,13 @@ const NoBalance = () => {
   return <h2>0 USDC</h2>;
 };
 
+enum ClaimState {
+  LOADED = 'Claim',
+  AWAITING_USER_SIGNATURE = 'Waiting for user signature...',
+  AWAITING_SERVER_RESPONSE = 'Waiting for server response...',
+  AWAITING_TX_USER_CONFIRMATION = 'Waiting for user confirmation...',
+}
+
 const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
   const token = useToken(props.obj.tokenAddress);
   const balance = useMemo(() => {
@@ -46,7 +53,7 @@ const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
   const { callback: claimAllCallback } = useClaimCallback(props.obj, muonVerificationData);
 
   const [submittedTxHash, setSubmittedTxHash] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+
   const mounted = useRef(false);
   useEffect(() => {
     mounted.current = true;
@@ -54,14 +61,32 @@ const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
       mounted.current = false;
     };
   }, []);
+
   const { account } = useWeb3React();
   const getMuonSignature = useGetMuonSignature();
+
+  const [claimState, setClaimState] = useState(ClaimState.LOADED);
+
+  useEffect(() => {
+    if (claimState === ClaimState.AWAITING_TX_USER_CONFIRMATION) return;
+    if (muonVerificationData && claimAllCallback) {
+      setClaimState(ClaimState.AWAITING_TX_USER_CONFIRMATION);
+      claimAllCallback().finally(() => {
+        if (mounted.current) {
+          setMuonVerificationData(null);
+          setClaimState(ClaimState.LOADED);
+        }
+      });
+    }
+  }, [claimAllCallback, claimState, muonVerificationData]);
+
   const claim = useCallback(async () => {
-    if (loading) return;
-    setLoading(true);
+    if (claimState !== ClaimState.LOADED) return;
     try {
+      setClaimState(ClaimState.AWAITING_USER_SIGNATURE);
       const timestamp = Math.floor(Date.now() / 1000);
       const sig = await getMuonSignature(account, timestamp);
+      setClaimState(ClaimState.AWAITING_SERVER_RESPONSE);
       const axiosInstance = axios.create({
         baseURL: process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_MUON_API_URL,
       });
@@ -69,18 +94,11 @@ const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
         `/v1/?app=dibs&method=claim&params[user]=${account}&params[token]=${props.obj.tokenAddress}&params[time]=${timestamp}&params[sign]=${sig}`,
       );
       setMuonVerificationData(verificationData.data);
-      const tx = await claimAllCallback?.();
-      if (tx) {
-        setSubmittedTxHash(tx.hash);
-      }
     } catch (e) {
       console.log('claim failed');
       console.log(e);
     }
-    if (mounted.current) {
-      setLoading(false);
-    }
-  }, [account, claimAllCallback, getMuonSignature, loading, props.obj.tokenAddress]);
+  }, [account, claimState, getMuonSignature, props.obj.tokenAddress]);
 
   function getLogoSrc(symbol: string | null | undefined) {
     if (symbol && ['eth', 'uni', 'usdc'].includes(symbol.toLowerCase())) {
@@ -106,8 +124,11 @@ const ClaimRow = (props: { obj: BalanceToClaimObject }) => {
           <p className={'text-xl font-semibold'}>{balance + ' ' + token?.symbol}</p>
         </div>
         <div>
-          <button className={`btn-medium btn-primary ${loading ? 'btn-waiting' : ''}`} onClick={claim}>
-            {loading ? 'Waiting to Confirm' : 'Claim'}
+          <button
+            className={`btn-medium btn-primary ${claimState !== ClaimState.LOADED ? 'btn-waiting' : ''}`}
+            onClick={claim}
+          >
+            {claimState}
           </button>
         </div>
       </li>

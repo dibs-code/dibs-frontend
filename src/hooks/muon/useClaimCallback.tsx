@@ -53,10 +53,11 @@ export default function useClaimCallback(
       },
       muonVerificationData.result.shieldSignature,
     ];
+    const encodedParams = muonContract.interface.encodeFunctionData('claim', params);
     return [
       {
         address: muonContract.address,
-        calldata: muonContract.interface.encodeFunctionData('claim', params) ?? '',
+        calldata: encodedParams ?? '',
         value: '0x0',
       },
     ];
