@@ -215,7 +215,7 @@ const Rewards = () => {
                 <p className={'text-22 mt-0.5'}>Earned Fees</p>
               </header>
               <main className={'flex flex-col lg:flex-row justify-between gap-4 lg:gap-2'}>
-                <div className={'dibs-claim-card bg-cf relative bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
+                <div className={'dibs-claim-card bg-cf relative bg-cover px-8 pt-6 pb-4 w-full h-52 sm:w-96 sm:h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 block relative font-light'}>
                     Claimable fees {/*<button*/}
                     {/*  onClick={() => setOpen(true)}*/}
@@ -236,7 +236,7 @@ const Rewards = () => {
                   </footer>
                 </div>
 
-                <div className={'bg-tf relative bg-cover pl-8 pr-4 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
+                <div className={'bg-tf relative bg-cover pl-8 pr-4 pt-6 pb-4 w-full h-52 sm:w-96 sm:h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 inline-block font-light'}>Total fees claimed</label>
                   {claimedBalances.length ? (
                     claimedBalances.map((b) => <AccBalance key={b.tokenAddress} obj={b} />)

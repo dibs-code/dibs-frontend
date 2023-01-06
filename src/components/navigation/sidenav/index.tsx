@@ -1,4 +1,3 @@
-import { faBars } from '@fortawesome/pro-regular-svg-icons';
 import {faCircleC, faGift, faRightLeft} from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Transition} from "@headlessui/react";
@@ -92,7 +91,7 @@ const Sidenav = () => {
                   navigate(link.address);
                 }
               }}
-              className={`flex mb-3 items-center transition duration-200 ${
+              className={`flex mb-3 items-center transition duration-200  ${
                 active ? 'text-primary' : 'text-light-gray-3'
               }
                 ${!disabled ? 'hover:text-primary cursor-pointer' : 'cursor-not-allowed'}
@@ -124,21 +123,36 @@ const Sidenav = () => {
         )}
       </nav>
 
-      <nav className={'dibs-mobile-nav block md:hidden fixed w-full text-right right-0 top-0 px-7 py-4 mb-4 bg-body'}>
-        <div onClick={() => {setShow(!show)}} className={'inline-block cursor-pointer'}><FontAwesomeIcon style={{ fontSize: 32, }} icon={faBars}></FontAwesomeIcon></div>
+      <nav className={'dibs-mobile-nav z-100 block md:hidden fixed w-full text-right right-0 top-0 px-7 py-4 mb-4'}>
+
+        {/*<div onClick={() => {setShow(!show)}} className={'inline-block cursor-pointer'}><FontAwesomeIcon style={{ fontSize: 32, }} icon={faBars}></FontAwesomeIcon></div>*/}
+        <div onClick={() => {setShow(!show)}} className={'inline-block z-100 cursor-pointer'}> <input className="checkbox" type="checkbox" name="" id="" />
+          <div className="hamburger-lines">
+            <span className="line line1"></span>
+            <span className="line line2"></span>
+            <span className="line line3"></span>
+          </div></div>
 
         <Transition
           as={Fragment}
           show={show}
           enter="transform ease-in-out transition duration-[400ms]"
-          enterFrom="opacity-0 w-0 translate-x-32"
-          enterTo="opacity-100 w-full translate-x-0"
+          enterFrom="opacity-0  translate-x-32"
+          enterTo="opacity-100 translate-x-0"
           leave="transform duration-500 transition ease-in-out"
-          leaveFrom="opacity-100"
+          leaveFrom="opacity-100 translate-x-0"
           leaveTo="opacity-0 translate-x-32"
         >
-          <div className={'w-96'}>
-            <h1>Hello</h1>
+          <div className={'w-full inset-0 h-screen overflow-y-auto bg-white absolute py-20 px-4'}>
+            {renderConnector()}
+            {menu}
+            {account && (
+              <div className={'flex justify-center'}>
+                <button className={'btn-primary-inverted btn-medium text-center'} onClick={disconnectWallet}>
+                  Disconnect Wallet
+                </button>
+              </div>
+            )}
           </div>
         </Transition>
       </nav>
