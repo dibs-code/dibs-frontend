@@ -111,7 +111,7 @@ const TestSwap = () => {
   }
 
   return (
-    <div className={'px-40 py-14'}>
+    <div className={'page-spacing'}>
       <SubmittedModal
         hash={submittedTxHash}
         closeModal={() => {
@@ -119,27 +119,27 @@ const TestSwap = () => {
         }}
       ></SubmittedModal>{' '}
       <Sidenav></Sidenav>
-      <main className={'pl-84'}>
+      <main className={'main-spacing'}>
         <header className={'border-b pb-4 mb-16'}>
           <h2>Test Swap</h2>
         </header>
-        <section className={'mt-8 gap-4 flex'}>
+        <section className={'mt-8 gap-4 flex flex-col lg:flex-row'}>
           <Input
-            className={'w-7/12'}
+            className={'w-full lg:w-7/12'}
             value={user}
             onUserInput={setUser}
             label={'User Address'}
             placeholder={'Enter Address'}
           />
           <Input
-            className={'w-5/12'}
+            className={'w-full lg:w-5/12'}
             value={parentName}
             onUserInput={setParentName}
             label={'Parent Code'}
             placeholder={'Enter Code'}
           />
         </section>
-        <section className={'mt-2 gap-4 flex'}>
+        <section className={'mt-2 gap-4 flex flex-col lg:flex-row'}>
           <Input
             type={'number'}
             className={'flex-auto'}

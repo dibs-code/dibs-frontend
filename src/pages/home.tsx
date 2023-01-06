@@ -4,9 +4,9 @@ import React from 'react';
 
 const Home = () => {
   return (
-    <div className={'px-40 py-14'}>
+    <div className={'page-spacing'}>
       <Sidenav></Sidenav>
-      <main className={'pl-84'}>
+      <main className={'main-spacing'}>
         <YourCode></YourCode>
       </main>
     </div>

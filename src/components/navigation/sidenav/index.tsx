@@ -1,11 +1,13 @@
-import { faCircleC, faGift, faRightLeft } from '@fortawesome/pro-solid-svg-icons';
+import { faBars } from '@fortawesome/pro-regular-svg-icons';
+import {faCircleC, faGift, faRightLeft} from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Transition} from "@headlessui/react";
 import { useWeb3React } from '@web3-react/core';
 import WalletModal from 'components/WalletModal';
 import { isSupportedChain } from 'constants/chains';
 import { useDibs } from 'hooks/dibs/useDibs';
 import useWalletActivation from 'hooks/useWalletActivation';
-import React, { PropsWithChildren, useMemo } from 'react';
+import React, {Fragment, PropsWithChildren, useMemo} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { shortenAddress } from 'utils/index';
 
@@ -30,6 +32,12 @@ const Sidenav = () => {
   function closeModal() {
     setOpen(false);
   }
+
+  const [show, setShow] = React.useState(false);
+
+  // function closeModal() {
+  //   setOpen(false);
+  // }
 
   const { account, chainId } = useWeb3React();
   const { addressToName } = useDibs();
@@ -102,8 +110,9 @@ const Sidenav = () => {
   );
 
   return (
-    <>
-      <nav className={'w-68 px-9 py-10 bg-white rounded-2xl fixed shadow-[0_6px_24px_rgba(0,0,0,0.05)]'}>
+    <div className={''}>
+
+      <nav className={'w-68 px-9 py-10 bg-white rounded-2xl fixed shadow-[0_6px_24px_rgba(0,0,0,0.05)] hidden md:block'}>
         {renderConnector()}
         {menu}
         {account && (
@@ -114,7 +123,26 @@ const Sidenav = () => {
           </div>
         )}
       </nav>
-    </>
+
+      <nav className={'dibs-mobile-nav block md:hidden fixed w-full text-right right-0 top-0 px-7 py-4 mb-4 bg-body'}>
+        <div onClick={() => {setShow(!show)}} className={'inline-block cursor-pointer'}><FontAwesomeIcon style={{ fontSize: 32, }} icon={faBars}></FontAwesomeIcon></div>
+
+        <Transition
+          as={Fragment}
+          show={show}
+          enter="transform ease-in-out transition duration-[400ms]"
+          enterFrom="opacity-0 w-0 translate-x-32"
+          enterTo="opacity-100 w-full translate-x-0"
+          leave="transform duration-500 transition ease-in-out"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0 translate-x-32"
+        >
+          <div className={'w-96'}>
+            <h1>Hello</h1>
+          </div>
+        </Transition>
+      </nav>
+    </div>
   );
 };
 

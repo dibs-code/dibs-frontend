@@ -5,9 +5,9 @@ import React from 'react';
 
 const Report = () => {
   return (
-    <div className={'px-40 py-14'}>
+    <div className={'page-spacing'}>
       <Sidenav></Sidenav>
-      <main className={'pl-84'}>
+      <main className={'main-spacing'}>
         <header className={'border-b pb-4 mb-16'}>
           <h2>Reports</h2>
         </header>

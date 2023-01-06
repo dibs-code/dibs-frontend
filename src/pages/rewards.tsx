@@ -148,7 +148,7 @@ const Rewards = () => {
 
   return (
 
-    <div className={'px-40 py-14'}>
+    <div className={'page-spacing'}>
       <Modal className={'!max-w-lg'} title={'Claimable Fee List'} open={open} closeModal={closeModal}>
         {balancesToClaim.length ? (
           balancesToClaim.map((b) => <ClaimRow key={b.tokenAddress} obj={b} />)
@@ -159,7 +159,7 @@ const Rewards = () => {
         )}
       </Modal>
       <Sidenav></Sidenav>
-      <main className={'pl-84'}>
+      <main className={'main-spacing'}>
         <>
           <header className={'border-b pb-4 mb-16'}>
             <h2>Rewads</h2>
@@ -175,8 +175,8 @@ const Rewards = () => {
                 <FontAwesomeIcon style={{ fontSize: 24 }} icon={faCircleDollarToSlot}></FontAwesomeIcon>
                 <p className={'text-22 mt-0.5'}>Earned Fees</p>
               </header>
-              <main className={'flex justify-between'}>
-                <div className={'bg-cf relative bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
+              <main className={'flex flex-col lg:flex-row justify-between gap-4 lg:gap-2'}>
+                <div className={'dibs-claim-card bg-cf relative bg-cover px-8 pt-6 pb-4 w-96 h-[256px] rounded-2xl'}>
                   <label className={'text-22 mb-2 block relative font-light'}>
                     Claimable fees {/*<button*/}
                     {/*  onClick={() => setOpen(true)}*/}
@@ -223,7 +223,7 @@ const Rewards = () => {
               <main>
                 <p className={'mb-2 pl-1'}>[A brief explaination about how this works and what you should do ]</p>
                 <div className={'lottery-card  px-12 py-8'}>
-                  <section className={'flex justify-between '}>
+                  <section className={'flex justify-between items-center lg:items-baseline gap-8 lg:gap-0 flex-col-reverse lg:flex-row'}>
                     <div className={''}>
                       <h4 className={'mb-6'}>
                         You have {userLotteryTickets.toNumber()} tickets for this week&apos;s lottery
@@ -248,9 +248,9 @@ const Rewards = () => {
                     </div>
                   </section>
 
-                  <section className={'flex justify-between items-end '}>
+                  <section className={'flex justify-center lg:justify-between items-end '}>
                     <div>
-                      <img src={'/lottery-img.png'} className={'w-44 relative right-4'} alt="lottery" />
+                      <img src={'/lottery-img.png'} className={'w-44 relative right-4 hidden lg:block'} alt="lottery" />
                       {prePrize && (
                         <div className={'inline-flex gap-2 mt-4 items-center px-3 py-2 bg-primary-light rounded-lg '}>
                           <FontAwesomeIcon style={{ fontSize: 20 }} icon={faGift}></FontAwesomeIcon>
