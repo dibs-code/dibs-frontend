@@ -109,7 +109,7 @@ const YourCode = (props: ModalProps) => {
             portion of the trade fee. For more information, please visit [link]
           </p>
           <section
-            className={'rounded-2xl bg-codeinfo h-80 bg-cover mt-4 flex flex-col gap-3 justify-center items-center'}
+            className={'px-2 rounded-2xl md:bg-codeinfo h-80 bg-cover mt-4 flex flex-col gap-3 justify-center items-center'}
           >
             <div>
               <div className={'rounded-xl bg-primary-light inline-block p-4'}>
@@ -148,7 +148,7 @@ const YourCode = (props: ModalProps) => {
       ) : (
         <main>
           <div className={'rounded-2xl text-xl bg-nocode bg-cover'}>
-            <p className={'text-2xl font-normal h-64 px-24 text-center flex justify-center items-center'}>
+            <p className={'text-xl md:text-2xl font-normal h-64 px-8 md:px-18 lg:px-24 text-center flex justify-center items-center'}>
               You didn’t create your dibs code yet,<br></br>
               Create one and start earning!
             </p>
@@ -157,9 +157,9 @@ const YourCode = (props: ModalProps) => {
             <FontAwesomeIcon style={{ fontSize: 20, color: '#2394D3' }} icon={faCircleInfo}></FontAwesomeIcon>
             <p className={'font-normal'}>Your dibs code can contain use lowercase, uppercase Letters and numbers</p>
           </div>
-          <section className={'mt-8 flex gap-4 items-center'}>
+          <section className={'mt-8 flex flex-col xl:flex-row gap-4 items-center'}>
             <Input
-              className={'flex-auto'}
+              className={'flex-auto w-full xl:w-auto'}
               value={name}
               onUserInput={setName}
               label={'Your Code'}
@@ -167,13 +167,15 @@ const YourCode = (props: ModalProps) => {
             />
             <Input
               value={parentCodeName}
+
               onUserInput={setParentCodeName}
-              className={'flex-auto'}
+              className={'flex-auto w-full xl:w-auto'}
+
               label={'Your Referral Code'}
               placeholder={'No referral code found'}
             />
             <button
-              className={`btn-primary btn-large font-medium mt-4 px-12 ${loading ? 'btn-waiting' : ''}`}
+              className={`btn-primary btn-large font-medium mt-4 w-full xl:w-auto px-8 ${loading ? 'btn-waiting' : ''}`}
               onClick={create}
             >
               {account

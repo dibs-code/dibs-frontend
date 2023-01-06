@@ -4,6 +4,7 @@
 
 
 html
+  // these two lines prevent changing the position of the body when you switch between a scrollable page to a non-scrollable one.
   overflow-x: hidden
   margin-right: calc(-1 * (100vw - 100%))
 
@@ -39,6 +40,12 @@ span
     @apply text-[17px] font-medium
 
 @layer components
+  .page-spacing
+    @apply px-4 md:px-8 lg:px-12 xl:px-24 lg1440:px-40 py-14 mt-8 md:mt-0
+
+  .main-spacing
+    @apply px-4 md:pl-84
+
   .card
     @apply rounded-3xl py-7 px-6
 
