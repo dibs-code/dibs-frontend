@@ -10,6 +10,7 @@ import { useDibs } from 'hooks/dibs/useDibs';
 import { useRegisterCallback } from 'hooks/dibs/useRegisterCallback';
 import useSelectChain from 'hooks/useSelectChain';
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAddPopup } from 'state/application/hooks';
 import { copyToClipboard } from 'utils/index';
 
@@ -26,10 +27,20 @@ export type ModalProps = PropsWithChildren<ModalPropsInterface>;
 const YourCode = (props: ModalProps) => {
   const { chainId, account } = useWeb3React();
   const { addressToName, parentCodeName: parentCodeNameFromContract } = useDibs();
-  const [parentCodeName, setParentCodeName] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [parentCodeName, setParentCodeName] = useState('');
 
   useEffect(() => {
-    setParentCodeName(parentCodeNameFromContract)
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+      setParentCodeName(refCode);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (parentCodeNameFromContract) {
+      setParentCodeName(parentCodeNameFromContract);
+    }
   }, [parentCodeNameFromContract]);
 
   const hasCode = useMemo(() => !!addressToName, [addressToName]);
@@ -109,25 +120,14 @@ const YourCode = (props: ModalProps) => {
             portion of the trade fee. For more information, please visit [link]
           </p>
           <section
-            className={'px-2 rounded-2xl md:bg-codeinfo h-80 bg-cover mt-4 flex flex-col gap-3 justify-center items-center'}
+            className={
+              'px-2 rounded-2xl md:bg-codeinfo h-80 bg-cover mt-4 flex flex-col gap-3 justify-center items-center'
+            }
           >
             <div>
               <div className={'rounded-xl bg-primary-light inline-block p-4'}>
                 <span className={'text-lg mr-3'}>Your Dibs Code:</span>
                 <span className={'text-2xl text-primary'}>{addressToName}</span>
-              </div>
-            </div>
-            <div>
-              <div className={'rounded-xl bg-soft-pink inline-block p-4'}>
-                <span className={'mr-2'}>Trade link: </span>
-                <span className={'font-normal mr-2'}>{refUrl}</span>
-                <span
-                  className={
-                    'py-1 px-2 bg-white rounded shadow-[0_4px_6px_rgba(0,0,0,0.07)] cursor-pointer transition duration-200 hover:shadow-xl'
-                  }
-                >
-                  <FontAwesomeIcon style={{ fontSize: 18 }} icon={faCopy} onClick={copyRefUrl}></FontAwesomeIcon>
-                </span>
               </div>
             </div>
             <div>
@@ -148,7 +148,11 @@ const YourCode = (props: ModalProps) => {
       ) : (
         <main>
           <div className={'rounded-2xl text-xl bg-nocode bg-cover'}>
-            <p className={'text-xl md:text-2xl font-normal h-64 px-8 md:px-18 lg:px-24 text-center flex justify-center items-center'}>
+            <p
+              className={
+                'text-xl md:text-2xl font-normal h-64 px-8 md:px-18 lg:px-24 text-center flex justify-center items-center'
+              }
+            >
               You didn’t create your dibs code yet,<br></br>
               Create one and start earning!
             </p>
@@ -167,12 +171,10 @@ const YourCode = (props: ModalProps) => {
             />
             <Input
               value={parentCodeName}
-
               onUserInput={setParentCodeName}
               className={'flex-auto w-full xl:w-auto'}
-
               label={'Your Referral Code'}
-              placeholder={'No referral code found'}
+              placeholder={'Enter Referral Code'}
             />
             <button
               className={`btn-primary btn-large font-medium mt-4 w-full xl:w-auto px-8 ${loading ? 'btn-waiting' : ''}`}
